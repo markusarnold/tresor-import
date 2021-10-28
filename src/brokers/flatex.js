@@ -398,7 +398,8 @@ const detectedButIgnoredDocument = content => {
     content.some(line =>
       line.toLowerCase().includes('einrichtung sparplan nr')
     ) ||
-    content.some(line => line.toLowerCase().includes('onlinebanking'))
+    content.some(line => line.toLowerCase().includes('onlinebanking')) ||
+    content.some(line => line.toLowerCase().includes('bruttothesaurierung'))
   );
 };
 

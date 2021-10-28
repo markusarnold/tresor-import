@@ -37,6 +37,7 @@ export const ignoredSamples = [
   require('./ignored/2020_saving_plan_confirmation.json'),
   require('./ignored/2021_at_depot_statement.json'),
   require('./ignored/2021_de_depot_statement.json'),
+  require('./ignored/2021_ishares_core.json'),
 ];
 
 export const allSamples = buySamples.concat(

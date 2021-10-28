@@ -583,6 +583,13 @@ describe('Broker: Flatex', () => {
       expect(result.status).toEqual(7);
       expect(result.activities.length).toEqual(0);
     });
+
+    test('The statement should be ignored: 2021_ishares_core', () => {
+      const result = flatex.parsePages(ignoredSamples[4]);
+
+      expect(result.status).toEqual(7);
+      expect(result.activities.length).toEqual(0);
+    });
   });
 
   beforeEach(() => {
