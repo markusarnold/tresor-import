@@ -428,6 +428,25 @@ describe('Broker: Consorsbank', () => {
         fee: 4.45,
       });
     });
+
+    test('Should map the document correctly: 2021_twist_bioscience', () => {
+      const result = consorsbank.parsePages(buySamples[19]);
+      expect(result.status).toEqual(0);
+      expect(result.activities[0]).toEqual({
+        broker: 'consorsbank',
+        type: 'Buy',
+        company: 'TWIST BIOSCIENCEDL-,00001',
+        date: '2021-10-06',
+        datetime: '2021-10-06T17:47:35.000Z',
+        isin: 'US90184D1000',
+        wkn: 'A2N7L2',
+        price: 86.4,
+        shares: 20,
+        amount: 1728,
+        tax: 0,
+        fee: 9.95,
+      });
+    });
   });
 
   describe('Sell', () => {
@@ -750,8 +769,9 @@ describe('Broker: Consorsbank', () => {
     });
 
     test('should map pdf data of agnc investment corp', () => {
-      const activities = consorsbank.parsePages(dividendsSamples[10])
-        .activities;
+      const activities = consorsbank.parsePages(
+        dividendsSamples[10]
+      ).activities;
 
       expect(activities).toEqual([
         {
@@ -774,8 +794,9 @@ describe('Broker: Consorsbank', () => {
     });
 
     test('Can parse dividend from a 2015 total sa file', () => {
-      const activities = consorsbank.parsePages(dividendsSamples[11])
-        .activities;
+      const activities = consorsbank.parsePages(
+        dividendsSamples[11]
+      ).activities;
 
       expect(activities).toEqual([
         {
@@ -795,8 +816,9 @@ describe('Broker: Consorsbank', () => {
     });
 
     test('Can parse dividend from a 2016 bmw file', () => {
-      const activities = consorsbank.parsePages(dividendsSamples[12])
-        .activities;
+      const activities = consorsbank.parsePages(
+        dividendsSamples[12]
+      ).activities;
 
       expect(activities).toEqual([
         {
@@ -816,8 +838,9 @@ describe('Broker: Consorsbank', () => {
     });
 
     test('Can parse dividend from a 2018 total sa file', () => {
-      const activities = consorsbank.parsePages(dividendsSamples[13])
-        .activities;
+      const activities = consorsbank.parsePages(
+        dividendsSamples[13]
+      ).activities;
 
       expect(activities).toEqual([
         {
@@ -838,8 +861,9 @@ describe('Broker: Consorsbank', () => {
     });
 
     test('Can parse dividend from a 2018 DEUTSCHE POST AG file', () => {
-      const activities = consorsbank.parsePages(dividendsSamples[14])
-        .activities;
+      const activities = consorsbank.parsePages(
+        dividendsSamples[14]
+      ).activities;
 
       expect(activities).toEqual([
         {
@@ -860,8 +884,9 @@ describe('Broker: Consorsbank', () => {
     });
 
     test('The statement should be parsed: 2015_ishare_stoxx', () => {
-      const activities = consorsbank.parsePages(dividendsSamples[15])
-        .activities;
+      const activities = consorsbank.parsePages(
+        dividendsSamples[15]
+      ).activities;
 
       expect(activities).toEqual([
         {

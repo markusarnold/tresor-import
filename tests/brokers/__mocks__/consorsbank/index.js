@@ -18,6 +18,7 @@ export const buySamples = [
   require('./buy/2020_fraport.json'),
   require('./buy/2020_palantir.json'),
   require('./buy/2021_tui_special_buy.json'),
+  require('./buy/2021_twist_bioscience.json'),
 ];
 
 export const sellSamples = [
