@@ -154,11 +154,21 @@ const findPayout = (content, baseCurrency) => {
     );
   }
 
-  const currencyLine = content[payoutLineIndex + 2];
-  const payout =
-    currencyLine === baseCurrency
-      ? content[payoutLineIndex + 1]
-      : content[payoutLineIndex + 3];
+  // Payouts and currencies can be in the same or a separate lines
+  // 4 lines may contain foreignCurrency, baseCurrency and payout 
+  const currencyAndPayoutLines = content.slice(payoutLineIndex + 1, payoutLineIndex + 5)
+
+  // Search for baseCurrency and payout in same line e.g. 1.11+ EUR
+  let payoutIndex = currencyAndPayoutLines.findIndex(line =>
+    line.includes(baseCurrency) && line !== baseCurrency
+  );
+
+  if (payoutIndex === -1) {
+    // Search for baseCurrency, payout value is always above that line
+    payoutIndex = currencyAndPayoutLines.findIndex(line => line === baseCurrency) - 1;
+  }
+
+  const payout = currencyAndPayoutLines[payoutIndex];
 
   return Big(parseGermanNum(payout.split(/\s+/)[0]));
 };
@@ -230,18 +240,27 @@ const findForeignInformation = content => {
     }
   }
 
-  let baseCurrencyLineIndex = content.findIndex(
-    line => line === 'Ausmachender Betrag'
+  // Get baseCurrency from line 'Umrechnung in $CURR'
+  let baseCurrencyLineIndex = content.findIndex(line =>
+    line.includes('Umrechnung in')
   );
-  if (baseCurrencyLineIndex < 0) {
-    baseCurrencyLineIndex = content.findIndex(
-      line => line === 'Berechnungsgrundlage für die Kapitalertragsteuer'
-    );
-  }
-  if (baseCurrencyLineIndex) {
-    baseCurrency = content[baseCurrencyLineIndex + 2];
-  }
 
+  if (baseCurrencyLineIndex > 0) {
+    baseCurrency = content[baseCurrencyLineIndex].split(' ')[2].trim();
+  } else {
+    baseCurrencyLineIndex = content.findIndex(
+      line => line === 'Ausmachender Betrag'
+    );
+
+    if (baseCurrencyLineIndex < 0) {
+      baseCurrencyLineIndex = content.findIndex(
+        line => line === 'Berechnungsgrundlage für die Kapitalertragsteuer'
+      );
+    }
+    if (baseCurrencyLineIndex) {
+      baseCurrency = content[baseCurrencyLineIndex + 2];
+    }
+  }
   return [Big(parseGermanNum(fxRate)), foreignCurrency, baseCurrency];
 };
 
@@ -279,9 +298,7 @@ const parseSavingsplan = content => {
     activity.fee = +Big(
       parseGermanNum(content[content.indexOf('Summe', idx) + 1])
     ).minus(activity.amount);
-    activities.push(
-      validateActivity(activity)
-    );
+    activities.push(validateActivity(activity));
     idx = content.indexOf('Kauf', idx + 1);
   }
   return activities;

@@ -331,8 +331,28 @@ describe('DKB broker', () => {
       });
     });
 
-    test('Should map the document correctly: 2020_deutsche_telekom.json', () => {
+    test('should map pdf data of sample 5 correctly', () => {
       const activities = dkb.parsePages(dividendsSamples[4]).activities;
+
+      expect(activities[0]).toEqual({
+        broker: 'dkb',
+        type: 'Dividend',
+        date: '2021-06-21',
+        datetime: '2021-06-21T' + activities[0].datetime.substring(11),
+        isin: 'IE0032077012',
+        company: 'INVESCOMI3 NASDAQ100 ETF REGISTERED SHARES DIS O.N.',
+        shares: 5.657,
+        price: 0.23864238995934242,
+        amount: 1.35,
+        fee: 0,
+        tax: 0,
+        fxRate: 1.191,
+        foreignCurrency: 'USD',
+      });
+    });
+
+    test('Should map the document correctly: 2020_deutsche_telekom.json', () => {
+      const activities = dkb.parsePages(dividendsSamples[5]).activities;
 
       expect(activities[0]).toEqual({
         broker: 'dkb',
@@ -350,7 +370,7 @@ describe('DKB broker', () => {
     });
 
     test('Should map the document correctly: ertragsabrechnung_fond.json', () => {
-      const activities = dkb.parsePages(dividendsSamples[5]).activities;
+      const activities = dkb.parsePages(dividendsSamples[6]).activities;
 
       expect(activities[0]).toEqual({
         broker: 'dkb',
