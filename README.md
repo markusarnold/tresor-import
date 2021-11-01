@@ -1,9 +1,9 @@
 # Tresor-Import - The File Import of Tresor One
 
-This is the PDF and PP-CSV Import used on [tresor.one](https://tresor.one).
+This is the PDF and PP-CSV Import used on [Parqet.com](https://parqet.com).
 This software is meant to be reviewed for transparency and security by users of Tresor One.
 Use of this library is granted for private, non-commercial, open-source products.  
-**For a commercial license for closed-source projects, contact [sumit@tresor.one](mailto:sumit@tresor.one)**
+**For a commercial license for closed-source projects, contact [sumit@tresor.one](mailto:sumit@parqet.com)**
 
 ## Supported Brokers
 
