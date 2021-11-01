@@ -539,12 +539,11 @@ const parseAccountStatement = pdfPages => {
     'Wertpapierverkauf',
     'Zinsen/Dividenden',
   ];
-  const yearLine =
-    pdfPages[
-      pdfPages.findIndex(line =>
-        line.toLowerCase().startsWith('kontoauszug nr. ')
-      )
-    ].split('.');
+  const yearLine = pdfPages[
+    pdfPages.findIndex(line =>
+      line.toLowerCase().startsWith('kontoauszug nr. ')
+    )
+  ].split('.');
   const year = yearLine[yearLine.length - 1];
   let idx = findFirstSearchtermIndexInArray(pdfPages, searchTerms);
   let activities = [];
@@ -558,7 +557,6 @@ const parseAccountStatement = pdfPages => {
     const companyIdx = pdfPages[idx + 1].startsWith('ABR: ')
       ? idx + 4
       : idx + 1;
-    /** @type {Partial<Importer.Activity>} */
     let activity = {
       broker: 'onvista',
       company: pdfPages[companyIdx],
@@ -596,7 +594,6 @@ const parseAccountStatement = pdfPages => {
 };
 
 const parseSingleTransactionFullText = fullText => {
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'onvista',
     isin: findISINFullText(fullText),
@@ -643,7 +640,6 @@ const parseSingleTransactionFullText = fullText => {
 };
 
 const parseSingleTransaction = pdfPage => {
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'onvista',
     isin: findISIN(pdfPage),

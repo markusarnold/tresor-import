@@ -81,7 +81,6 @@ function parseBaseAction(pdfArray, pdfOffset, actionType) {
       );
     }
   }
-  /** @type {Partial<Importer.Activity>} */
   const activity = {
     broker: 'ebase',
     type: actionType,

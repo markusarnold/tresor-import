@@ -394,7 +394,6 @@ export const canParseDocument = (pages, extension) => {
 };
 
 const parseData = (textArr, type) => {
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'comdirect',
     type,
@@ -451,8 +450,12 @@ const parseData = (textArr, type) => {
       // Still needs handling of Foreign  Rates
       let payout, withholdingTax, integratedWithholdingTax;
       activity.type = 'Dividend';
-      [activity.isin, activity.wkn, activity.company, activity.shares] =
-        findISINAndWKN(textArr, 0, 0);
+      [
+        activity.isin,
+        activity.wkn,
+        activity.company,
+        activity.shares,
+      ] = findISINAndWKN(textArr, 0, 0);
       date = findDateDividend(textArr, formatId);
       [activity.tax, withholdingTax] = findTax(textArr, undefined, formatId);
       [payout, integratedWithholdingTax] = findPayout(textArr);

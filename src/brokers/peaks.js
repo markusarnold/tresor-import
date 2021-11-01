@@ -59,7 +59,6 @@ const parseShares = s => {
 };
 
 const parseTransaction = (transaction, typeCategory) => {
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'peaks',
     fee: 0,
@@ -87,7 +86,6 @@ const parseTransaction = (transaction, typeCategory) => {
   if (typeCategory.toLowerCase().includes('dividende')) {
     // dividends are reinvested.
     // Copy the activity, set one to 'Dividend' and the other to 'Buy'
-    /** @type {Importer.Activity} */
     let secondActivity = {};
     Object.assign(secondActivity, activity);
     secondActivity.type = 'Dividend';

@@ -216,12 +216,19 @@ const isDividend = textArr =>
   );
 
 const parseSingleTransaction = textArr => {
-  let date, wkn, isin, company, shares, price, amount, fxRate, foreignCurrency;
-  /** @type {Importer.ActivityTypeUnion} */
-  let type;
+  let type,
+    date,
+    wkn,
+    isin,
+    company,
+    shares,
+    price,
+    amount,
+    fxRate,
+    foreignCurrency;
   let fee = 0;
   let tax = 0;
-  /** @type {Importer.Activity} */
+  /** @type {Record<String, any>} */
   let activity;
   let time;
   if (isBuy(textArr)) {
@@ -352,12 +359,6 @@ const parseBuySellTransaction = (pdfPage, pageIdx, type) => {
   return activity;
 };
 
-/**
- *
- * @param {Importer.page} pdfPage
- * @param {number} pageIdx
- * @returns {Importer.Activity}
- */
 const parseDividendTransaction = (pdfPage, pageIdx) => {
   const txEndIdx = pdfPage.indexOf('STK', pageIdx);
   const txStart = findPriorIndex(pdfPage, pageIdx) + 1;
@@ -370,7 +371,6 @@ const parseDividendTransaction = (pdfPage, pageIdx) => {
     undefined
   );
 
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'commerzbank',
     type: 'Dividend',
@@ -398,7 +398,7 @@ const parseDividendTransaction = (pdfPage, pageIdx) => {
   // It is unknown from the .pdf file why the net amount and payed out amount
   // diverge, most likely reason is tax:
   activity.tax = +Big(activity.amount).minus(postTaxAmount);
-  return /** @type {Importer.Activity} */ (activity);
+  return activity;
 };
 
 // This is not yet implemented in the T1 backend and can be commented out as soon as it is.
@@ -424,7 +424,6 @@ const parseTransactionReport = pdfPages => {
   for (const pdfPage of pdfPages) {
     let pageIdx = 0;
     while (pageIdx <= pdfPage.length) {
-      /** @type {Importer.Activity} */
       let activity = undefined;
       if (pdfPage[pageIdx] === 'Kauf') {
         activity = parseBuySellTransaction(pdfPage, pageIdx, 'Buy');

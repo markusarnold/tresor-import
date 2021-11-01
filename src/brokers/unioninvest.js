@@ -241,7 +241,6 @@ const parseDiv = (pdfPage, activityIdx, dateIdx) => {
   // The documents from unioninvest didn't contains any order time
   const [date, datetime] = createActivityDateTime(pdfPage[dateIdx], undefined);
 
-  /** @type {Importer.Activity} */
   let activity = {
     broker: 'unioninvest',
     type: 'Dividend',

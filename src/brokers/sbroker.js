@@ -263,7 +263,6 @@ const findTax = (content, fxRate = undefined) => {
 const parseBuySellDividend = (pages, type) => {
   const content = pages.flat();
 
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'sBroker',
     type,

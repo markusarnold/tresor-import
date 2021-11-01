@@ -118,9 +118,7 @@ export const canParseDocument = (pages, extension) => {
 };
 
 const parsePage = content => {
-  /** @type {Importer.ActivityTypeUnion} */
-  let type;
-  let date, time, isin, company, shares, price, amount, fee, tax;
+  let type, date, time, isin, company, shares, price, amount, fee, tax;
 
   if (isPageTypeBuy(content)) {
     const amountWithoutFees = Big(findAmount(content, false));

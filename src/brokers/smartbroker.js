@@ -59,11 +59,6 @@ const findTax = (textArr, fxRate) => {
   return +completeTax;
 };
 
-/**
- *
- * @param {Importer.page} content
- * @returns {[number?, string?]}
- */
 const findFxRateAndForeignCurrency = content => {
   const fxRateLineNumber = content.findIndex(line =>
     line.includes('Devisenkurs')
@@ -154,7 +149,6 @@ export const canParseDocument = (pages, extension) => {
 
 const parseBuySellDividend = (pdfPages, type) => {
   const textArr = pdfPages.flat();
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'smartbroker',
     type,
@@ -205,8 +199,6 @@ const parseBuySellDividend = (pdfPages, type) => {
 const parseTurboKO = pdfPages => {
   const companyStartIdx = pdfPages.indexOf('Gattungsbezeichnung') + 1;
   const companyEndIdx = pdfPages.indexOf('Fälligkeit');
-
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'smartbroker',
     type: 'Sell',
@@ -228,8 +220,6 @@ const parseTurboKO = pdfPages => {
 
 const parseTransferIn = pdfPages => {
   const isRevision = pdfPages.includes('Anpassung Anschaffungsdaten');
-
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'smartbroker',
     type: 'TransferIn',

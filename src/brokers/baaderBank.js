@@ -278,7 +278,6 @@ export const canParseDocument = (pages, extension) => {
 };
 
 const parsePage = (content, documentType) => {
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: getBroker(content),
     type: documentType,
@@ -325,9 +324,7 @@ const parseAccountStatement = content => {
       break;
     }
 
-    /** @type {Importer.ActivityTypeUnion} */
-    let type;
-    let companyLineNumber, isin, company, shares, amount;
+    let companyLineNumber, type, isin, company, shares, amount;
     if (content[startIndex + 2] === 'Kauf') {
       type = 'Buy';
       amount = parseGermanNum(content[startIndex + 3]);

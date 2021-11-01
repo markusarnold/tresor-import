@@ -47,7 +47,6 @@ const parseTransaction = (content, index, numberParser, offset) => {
 
   // Sometimes the currency comes first; sometimes the value comes first
   const amountOffset = numberRegex.test(content[sharesIdx + 1]) ? 5 : 6;
-  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'degiro',
     company,
@@ -178,7 +177,6 @@ const parseDepotStatement = pdfPages => {
   let activities = [];
   let isinIdx = findFirstIsinIndexInArray(flattendPages);
   while (isinIdx >= 0) {
-    /** @type {Importer.Activity} */
     const activity = {
       broker: 'degiro',
       type: 'TransferIn',
