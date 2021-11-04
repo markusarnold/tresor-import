@@ -6,7 +6,7 @@ import {
   validateActivity,
   findNextLineIndexByRegex,
   findFirstSearchtermIndexInArray,
-  findPreviousRegexMatchIdx
+  findPreviousRegexMatchIdx,
 } from '@/helper';
 
 const idStringLong =
@@ -287,3 +287,5 @@ export const parsePages = pages => {
     status: 0,
   };
 };
+
+export const parsingIsTextBased = () => true;

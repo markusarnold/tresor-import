@@ -487,3 +487,5 @@ export const parsePages = contents => {
     status: 3,
   };
 };
+
+export const parsingIsTextBased = () => true;

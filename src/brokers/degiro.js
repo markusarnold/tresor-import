@@ -260,3 +260,5 @@ export const parsePages = pdfPages => {
     status: activities === undefined ? 1 : 0,
   };
 };
+
+export const parsingIsTextBased = () => true;

@@ -13,11 +13,12 @@ describe('PDF bandler', () => {
       allImplementations.forEach(implementation => {
         if (implementation !== onvista) {
           // The smartbroker implementation is extending onvista. So it's valid, that onvista exports more than two functions. No check required.
-          expect(Object.keys(implementation).length).toEqual(2);
+          expect(Object.keys(implementation).length).toEqual(3);
         }
 
         expect(typeof implementation.canParseDocument).toEqual('function');
         expect(typeof implementation.parsePages).toEqual('function');
+        expect(typeof implementation.parsingIsTextBased).toEqual('function');
       });
     });
   });

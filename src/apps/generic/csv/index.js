@@ -147,3 +147,5 @@ const parseRow = (lowerCaseHeaders, row) => {
 
   return validateActivity(activity);
 };
+
+export const parsingIsTextBased = () => true;

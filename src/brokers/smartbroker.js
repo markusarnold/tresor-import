@@ -282,3 +282,5 @@ export const parsePages = pdfPages => {
       };
   }
 };
+
+export const parsingIsTextBased = () => true;

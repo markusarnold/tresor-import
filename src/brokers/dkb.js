@@ -155,17 +155,21 @@ const findPayout = (content, baseCurrency) => {
   }
 
   // Payouts and currencies can be in the same or a separate lines
-  // 4 lines may contain foreignCurrency, baseCurrency and payout 
-  const currencyAndPayoutLines = content.slice(payoutLineIndex + 1, payoutLineIndex + 5)
+  // 4 lines may contain foreignCurrency, baseCurrency and payout
+  const currencyAndPayoutLines = content.slice(
+    payoutLineIndex + 1,
+    payoutLineIndex + 5
+  );
 
   // Search for baseCurrency and payout in same line e.g. 1.11+ EUR
-  let payoutIndex = currencyAndPayoutLines.findIndex(line =>
-    line.includes(baseCurrency) && line !== baseCurrency
+  let payoutIndex = currencyAndPayoutLines.findIndex(
+    line => line.includes(baseCurrency) && line !== baseCurrency
   );
 
   if (payoutIndex === -1) {
     // Search for baseCurrency, payout value is always above that line
-    payoutIndex = currencyAndPayoutLines.findIndex(line => line === baseCurrency) - 1;
+    payoutIndex =
+      currencyAndPayoutLines.findIndex(line => line === baseCurrency) - 1;
   }
 
   const payout = currencyAndPayoutLines[payoutIndex];
@@ -450,3 +454,5 @@ export const parsePages = pages => {
     status: 0,
   };
 };
+
+export const parsingIsTextBased = () => true;

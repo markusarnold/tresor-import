@@ -134,3 +134,5 @@ export const parsePages = contents => {
 
   return { activities, status: 0 };
 };
+
+export const parsingIsTextBased = () => true;

@@ -318,3 +318,5 @@ export const parsePages = pages => {
       };
   }
 };
+
+export const parsingIsTextBased = () => true;

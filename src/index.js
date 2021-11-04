@@ -39,9 +39,14 @@ export const parseActivitiesFromPages = (pages, extension) => {
       if (extension === 'pdf') {
         return filterResultActivities(implementations[0].parsePages(pages));
       } else if (extension === 'csv') {
-        return filterResultActivities(
-          implementations[0].parsePages(JSON.parse(csvLinesToJSON(pages[0])))
-        );
+        const implementation = implementations[0];
+
+        let content = pages[0];
+        if (!implementation.parsingIsTextBased()) {
+          content = JSON.parse(csvLinesToJSON(content));
+        }
+
+        return filterResultActivities(implementations[0].parsePages(content));
       }
       // Invalid Filetype
       else {
