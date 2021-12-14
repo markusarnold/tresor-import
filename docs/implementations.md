@@ -23,6 +23,7 @@ a more detailed explanation is given behind brokername.
 | Portfolio Performance                                  | .csv file Containing Buys, Sells, Dividends, TransferIn, TransferOut | Must be cleared of splits, only `.csv` files generated via menu `File` -> `export` |
 | Postbank                                               | Buy, Sell, Dividend                                                  |                                                                                    |
 | Scalable Capital                                       | See Baader Bank                                                      |                                                                                    |
+| Quirion                                                | Buy, Dividend                                                        |                                                                                    |
 | Smartbroker                                            | Buy, Sell, Dividend, Knockouts                                       | (Portfolio Overview and Cost Information can't be parsed                           |
 | Trade Republic                                         | Buy, Sell, Dividend, Quarter/Year report                             |                                                                                    |
 | Union Investment                                       | Buy, Sell, Dividend                                                  |                                                                                    |

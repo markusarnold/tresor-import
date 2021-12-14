@@ -19,6 +19,7 @@ import * as smartbroker from './smartbroker';
 import * as traderepublic from './traderepublic';
 import * as unioninvest from './unioninvest';
 import * as peaks from './peaks';
+import * as quirion from './quirion';
 
 export {
   _1822direkt,
@@ -42,4 +43,5 @@ export {
   traderepublic,
   unioninvest,
   peaks,
+  quirion,
 };
