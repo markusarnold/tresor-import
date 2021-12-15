@@ -53,7 +53,7 @@ export const parsePages = content => {
     };
   }
 
-  const lowerCaseHeaders = headers.map(header => header.toLowerCase());
+  const lowerCaseHeaders = headers.map(header => header.toLowerCase().trim());
 
   // parse every content row
   // return empty activity array and status code on error
@@ -104,7 +104,7 @@ const parseRow = (lowerCaseHeaders, row) => {
     const key = lowerCaseHeaders[i];
     if (FIELD_MAP.has(key)) {
       const { fieldName, parserFunc, defaultValue } = FIELD_MAP.get(key);
-      let params = [values[i]];
+      let params = [values[i].trim()];
       if (defaultValue) params = [...params, defaultValue];
       const parsedValue = parserFunc(...params);
       // only assign defined values --> ignore undefined values
