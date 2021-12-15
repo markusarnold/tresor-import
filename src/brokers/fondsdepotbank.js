@@ -27,6 +27,7 @@ const findCompany = content => {
 /**
  *
  * @param {string[]} content
+ * @param {Importer.ActivityTypeUnion} type
  * @returns {number}
  */
 const findAmount = (content, type) => {
@@ -40,6 +41,7 @@ const findAmount = (content, type) => {
 /**
  *
  * @param {string[]} content
+ * @param {Importer.ActivityTypeUnion} type
  * @returns {string}
  */
 const findDate = (content, type) => {
@@ -72,6 +74,7 @@ const findPrice = (content, type) => {
 /**
  *
  * @param {string[]} content
+ * @param {Importer.ActivityTypeUnion} type
  * @returns {number}
  */
 const findFee = (content, type) => {
@@ -84,6 +87,7 @@ const findFee = (content, type) => {
 /**
  *
  * @param {string[]} content
+ * @param {Importer.ActivityTypeUnion} type
  * @returns {number}
  */
 const findShares = (content, type) => {
@@ -102,6 +106,7 @@ const findShares = (content, type) => {
 /**
  *
  * @param {string[]} content
+ * @param {Importer.ActivityTypeUnion} type
  * @returns {number}
  */
 const findTaxes = (content, type) => {
@@ -125,6 +130,7 @@ const findTaxes = (content, type) => {
 /**
  *
  * @param {string[]} content
+ * @returns {Importer.ActivityTypeUnion | 'Ignored'}
  */
 const getDocumentType = content => {
   if (content.includes('Anlagebetrag')) {
@@ -141,6 +147,7 @@ const getDocumentType = content => {
 
 /**
  *
+ * @param {Importer.page[]} pages
  * @param {string} extension
  * @returns {boolean}
  */
@@ -158,8 +165,11 @@ export const canParseDocument = (pages, extension) => {
  *
  * @param {string[]} fondInfo
  * @param {string[]} transactionInfo
+ * @param {Importer.ActivityTypeUnion} type
+ * @returns {Importer.Activity}
  */
 const parseData = (fondInfo, transactionInfo, type) => {
+  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'fondsdepotbank',
     type,
@@ -180,6 +190,11 @@ const parseData = (fondInfo, transactionInfo, type) => {
   return validateActivity(activity);
 };
 
+/**
+ *
+ * @param {Importer.page[]} contents
+ * @returns {Importer.ParserResult}
+ */
 export const parsePages = contents => {
   const activities = [];
   const type = getDocumentType(contents[0]);

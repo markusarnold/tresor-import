@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 /**
  * Checks if document can be parsed by generic csv parser
  *
+ * @param {Importer.page[]} doc - file to be parsed
  * @param {string} extension - extension of file to be parsed
  * @returns {boolean} - true if can be parsed, false otherwise
  */
@@ -85,6 +86,7 @@ export const parsePages = content => {
  *
  * @param {string[]} lowerCaseHeaders
  * @param {string} row
+ * @returns {Importer.Activity | undefined}
  */
 const parseRow = (lowerCaseHeaders, row) => {
   const values = row.split(';');

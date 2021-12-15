@@ -285,6 +285,7 @@ const parseSavingsplan = content => {
       'dd.MM.yyyy',
       'dd.MM.yyyy HH:mm:ss'
     );
+    /** @type {Partial<Importer.Activity>} */
     let activity = {
       broker: 'dkb',
       type: 'Buy',
@@ -383,6 +384,7 @@ export const parsePages = pages => {
   const pieceIdx = allPages.findIndex(t => t.includes('Stück'));
   const isinIdx = findISINIdx(allPages, pieceIdx);
 
+  /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'dkb',
     type: typeOfDocument,
