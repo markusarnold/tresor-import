@@ -20,6 +20,7 @@ export const sellSamples = [
   require('./sell/2020_eur_sauren_global_balanced.json'),
   require('./sell/2020_eur_sma_solar_technology.json'),
   require('./sell/2021_US5949181045.json'),
+  require('./sell/2021_US5949181045_tax_debit.json'),
 ];
 
 export const dividendSamples = [
