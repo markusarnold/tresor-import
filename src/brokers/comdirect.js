@@ -433,7 +433,11 @@ const parseData = (textArr, type) => {
       activity.amount = +findAmount(textArr, fxRate, foreignCurrency, formatId);
       activity.price = +Big(activity.amount).div(activity.shares);
       activity.fee = findFee(textArr, activity.amount, true, formatId);
-      activity.tax = findTax(textArr, fxRate, formatId)[0];
+
+      const [tax, withholdingTax] = findTax(textArr, fxRate, formatId);
+      // "angerechnete ausländische Quellensteuer:" should be not relevant for sell operations.
+      activity.tax = +Big(tax).minus(withholdingTax);
+
       break;
     }
     case 'Dividend': {
@@ -451,8 +455,12 @@ const parseData = (textArr, type) => {
       // Still needs handling of Foreign  Rates
       let payout, withholdingTax, integratedWithholdingTax;
       activity.type = 'Dividend';
-      [activity.isin, activity.wkn, activity.company, activity.shares] =
-        findISINAndWKN(textArr, 0, 0);
+      [
+        activity.isin,
+        activity.wkn,
+        activity.company,
+        activity.shares,
+      ] = findISINAndWKN(textArr, 0, 0);
       date = findDateDividend(textArr, formatId);
       [activity.tax, withholdingTax] = findTax(textArr, undefined, formatId);
       [payout, integratedWithholdingTax] = findPayout(textArr);
