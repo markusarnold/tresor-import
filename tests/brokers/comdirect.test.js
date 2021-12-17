@@ -380,6 +380,26 @@ describe('Broker: comdirect', () => {
         tax: 0,
       });
     });
+
+    test('Can parse the sell order: 2021_US5949181045', () => {
+      const result = comdirect.parsePages(sellSamples[5]).activities;
+
+      expect(result.length).toEqual(1);
+      expect(result[0]).toEqual({
+        broker: 'comdirect',
+        type: 'Sell',
+        date: '2021-11-29',
+        datetime: '2021-11-29T07:04:00.000Z',
+        isin: 'US5949181045',
+        wkn: '870747',
+        company: 'Microsoft Corp.',
+        shares: 1,
+        price: 295,
+        amount: 295,
+        fee: 6.4,
+        tax: 47.61,
+      });
+    });
   });
 
   describe('Validate dividends', () => {
