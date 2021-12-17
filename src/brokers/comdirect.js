@@ -253,14 +253,19 @@ const findTax = (textArr, fxRate, formatId) => {
   // Relevant for Sell Operations and TaxInfo Dividends
   let localTax = 0;
   const payedTaxIndex = textArr.indexOf('abgeführte Steuern');
-  if (payedTaxIndex >= 0) {
-    let lineWithTaxValue;
+  const refundedTaxIndex = textArr.indexOf('erstattete Steuern');
+
+  if (payedTaxIndex >= 0 || refundedTaxIndex >= 0) {
+    const lineNumber = payedTaxIndex >= 0 ? payedTaxIndex : refundedTaxIndex;
+
+    let value;
     if (formatId === 1) {
-      lineWithTaxValue = textArr[payedTaxIndex + 2];
+      value = textArr[lineNumber + 2];
     } else {
-      lineWithTaxValue = textArr[payedTaxIndex + 1].split(/\s+/)[1];
+      value = textArr[lineNumber + 1].split(/\s+/)[1];
     }
-    localTax = Math.abs(parseGermanNum(lineWithTaxValue));
+
+    localTax = +Big(parseGermanNum(value)).mul(-1);
   }
 
   return [+Big(withholdingTax).plus(localTax), withholdingTax];
