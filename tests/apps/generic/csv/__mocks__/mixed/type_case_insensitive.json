@@ -1,0 +1,30 @@
+[
+  {
+    "time": "00:00:00",
+    "currency": "EUR",
+    "date": "2021-01-04",
+    "price": 100,
+    "shares": 1,
+    "tax": 2,
+    "fee": 4.99,
+    "type": "Buy",
+    "broker": "comdirect",
+    "isin": "US0378331005",
+    "datetime": "2021-01-03T23:00:00.000Z",
+    "amount": 100
+  },
+  {
+    "time": "00:00:00",
+    "currency": "EUR",
+    "date": "2021-12-09",
+    "price": 100,
+    "shares": 1,
+    "tax": 2,
+    "fee": 4.99,
+    "type": "Buy",
+    "broker": "comdirect",
+    "isin": "US2546871060",
+    "datetime": "2021-12-08T23:00:00.000Z",
+    "amount": 100
+  }
+]
