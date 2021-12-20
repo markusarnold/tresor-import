@@ -1,6 +1,7 @@
 import Big from 'big.js';
 import { DateTime } from 'luxon';
 import { ParqetParserError } from './errors';
+import { validTypes } from '@/helper';
 
 // TODO once typescript is ready for usage in unit tests as well, replace jsDoc types with typescript signatures
 
@@ -89,6 +90,27 @@ const parseCurrency = (value, defaultValue) => {
 /**
  *
  * @param {string} value
+ * @returns {string | undefined}
+ */
+const parseTypeString = value => {
+  if (!value) {
+    return undefined;
+  }
+
+  value = value.trim().toLowerCase();
+
+  const allTypes = validTypes();
+  const typeIndex = allTypes.findIndex(type => type.toLowerCase() === value);
+  if (typeIndex >= 0) {
+    return allTypes[typeIndex];
+  }
+
+  return undefined;
+};
+
+/**
+ *
+ * @param {string} value
  * @param {string} [defaultValue]
  * @returns {string | undefined}
  */
@@ -140,7 +162,7 @@ export const FIELD_MAP = new Map([
   ['shares', { fieldName: 'shares', parserFunc: parseDecimal }],
   ['tax', { fieldName: 'tax', parserFunc: parseDecimal, defaultValue: 0 }],
   ['fee', { fieldName: 'fee', parserFunc: parseDecimal, defaultValue: 0 }],
-  ['type', { fieldName: 'type', parserFunc: parseSimpleString }],
+  ['type', { fieldName: 'type', parserFunc: parseTypeString }],
   ['broker', { fieldName: 'broker', parserFunc: parseSimpleString }],
   ['holding', { fieldName: 'holding', parserFunc: parseSimpleString }],
   ['isin', { fieldName: 'isin', parserFunc: parseSimpleString }],

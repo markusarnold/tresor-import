@@ -107,6 +107,11 @@ export function findPreviousRegexMatchIdx(arr, idx, regex) {
   return -1;
 }
 
+/** @returns string[] */
+export function validTypes() {
+  return ['Buy', 'Sell', 'Dividend', 'TransferIn', 'TransferOut'];
+}
+
 /**
  *
  * @param {Importer.Activity | Partial<Importer.Activity>} activity
@@ -277,11 +282,7 @@ export function validateActivity(activity, findSecurityAlsoByCompany = false) {
     return undefined;
   }
 
-  if (
-    !['Buy', 'Sell', 'Dividend', 'TransferIn', 'TransferOut'].includes(
-      activity.type
-    )
-  ) {
+  if (!validTypes().includes(activity.type)) {
     console.error(
       'The activity type for ' +
         activity.broker +
