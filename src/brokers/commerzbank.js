@@ -354,7 +354,7 @@ const parseBuySellTransaction = (pdfPage, pageIdx, type) => {
 
 /**
  *
- * @param {Importer.page} pdfPage
+ * @param {Importer.Page} pdfPage
  * @param {number} pageIdx
  * @returns {Importer.Activity}
  */

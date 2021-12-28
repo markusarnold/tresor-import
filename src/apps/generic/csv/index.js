@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 /**
  * Checks if document can be parsed by generic csv parser
  *
- * @param {Importer.page[]} doc - file to be parsed
+ * @param {Importer.Page[]} doc - file to be parsed
  * @param {string} extension - extension of file to be parsed
  * @returns {boolean} - true if can be parsed, false otherwise
  */

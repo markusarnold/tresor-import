@@ -51,9 +51,10 @@ const findDate = (content, type) => {
   } else if (type === 'Sell') {
     dateLine = content[2];
   } else if (type === 'Dividend') {
-    dateLine = content[
-      content.findIndex(t => t.includes('Ausschüttung per '))
-    ].split(/\s+/)[2];
+    dateLine =
+      content[content.findIndex(t => t.includes('Ausschüttung per '))].split(
+        /\s+/
+      )[2];
   }
   return getGermanDate(dateLine);
 };
@@ -147,7 +148,7 @@ const getDocumentType = content => {
 
 /**
  *
- * @param {Importer.page[]} pages
+ * @param {Importer.Page[]} pages
  * @param {string} extension
  * @returns {boolean}
  */
@@ -192,7 +193,7 @@ const parseData = (fondInfo, transactionInfo, type) => {
 
 /**
  *
- * @param {Importer.page[]} contents
+ * @param {Importer.Page[]} contents
  * @returns {Importer.ParserResult}
  */
 export const parsePages = contents => {

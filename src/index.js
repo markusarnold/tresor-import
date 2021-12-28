@@ -13,7 +13,7 @@ export const allImplementations = [
   ...Object.values(apps),
 ];
 
-/** @type { (pages: Importer.page[], extension: string) => Importer.Implementation[] | undefined} */
+/** @type { (pages: Importer.Page[], extension: string) => Importer.Implementation[] | undefined} */
 export const findImplementation = (pages, extension) => {
   // The broker or app will be selected by the content of the first page
   return allImplementations.filter(implementation =>
@@ -21,7 +21,7 @@ export const findImplementation = (pages, extension) => {
   );
 };
 
-/** @type { (pages: Importer.page[], extension: string) => Importer.ParserResult } */
+/** @type { (pages: Importer.Page[], extension: string) => Importer.ParserResult } */
 export const parseActivitiesFromPages = (pages, extension) => {
   if (pages.length === 0) {
     // Without pages we don't have any activity
@@ -88,7 +88,7 @@ export const parseFile = file => {
       }
 
       let fileContent, pdfDocument;
-      /** @type {Importer.page[]} */
+      /** @type {Importer.Page[]} */
       let pages = [];
 
       if (extension === 'pdf') {
