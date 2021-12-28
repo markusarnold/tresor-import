@@ -1,5 +1,5 @@
-import { findImplementation } from '../../src';
 import * as baaderBank from '../../src/brokers/baaderBank';
+import { validateAllSamples } from '../setup/brokers';
 import {
   allSamples,
   buySamples,
@@ -12,22 +12,7 @@ import {
 describe('Broker: scalable.capital', () => {
   let consoleErrorSpy;
 
-  describe('Check all documents', () => {
-    test('Can the document parsed with scalable.capital', () => {
-      allSamples.forEach(pages => {
-        expect(baaderBank.canParseDocument(pages, 'pdf')).toEqual(true);
-      });
-    });
-
-    test('Can identify a implementation from the document as scalable.capital', () => {
-      allSamples.forEach(pages => {
-        const implementations = findImplementation(pages, 'pdf');
-
-        expect(implementations.length).toEqual(1);
-        expect(implementations[0]).toEqual(baaderBank);
-      });
-    });
-  });
+  validateAllSamples(baaderBank, allSamples);
 
   describe('Validate buys', () => {
     test('Can the market order be parsed from the document', () => {

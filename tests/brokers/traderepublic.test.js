@@ -1,5 +1,5 @@
-import { findImplementation } from '@/index';
 import * as traderepublic from '../../src/brokers/traderepublic';
+import { validateAllSamples } from '../setup/brokers';
 import {
   allSamples,
   buySamples,
@@ -13,22 +13,7 @@ import {
 describe('Broker: Trade Republic', () => {
   let consoleErrorSpy;
 
-  describe('Check all documents', () => {
-    test('Can the document parsed with Trade Republic', () => {
-      allSamples.forEach(pages => {
-        expect(traderepublic.canParseDocument(pages, 'pdf')).toEqual(true);
-      });
-    });
-
-    test('Can identify a implementation from the document as Trade Republic', () => {
-      allSamples.forEach(pages => {
-        const implementations = findImplementation(pages, 'pdf');
-
-        expect(implementations.length).toEqual(1);
-        expect(implementations[0]).toEqual(traderepublic);
-      });
-    });
-  });
+  validateAllSamples(traderepublic, allSamples);
 
   describe('Validate buys', () => {
     test('Map a limit order correctly', () => {
@@ -226,8 +211,9 @@ describe('Broker: Trade Republic', () => {
 
   describe('Validate dividends', () => {
     test('Should map the pdf data correctly for: Royal Dutch Shell', () => {
-      const activities = traderepublic.parsePages(dividendSamples[0])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[0]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -248,8 +234,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('Should map the pdf data correctly for: iSh.ST.Eur.Sel.Div.30 U.ETF DE', () => {
-      const activities = traderepublic.parsePages(dividendSamples[1])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[1]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -268,8 +255,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('Should map the pdf data correctly for: iSh.EO ST.Sel.Div.30 U.ETF DE', () => {
-      const activities = traderepublic.parsePages(dividendSamples[2])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[2]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -288,8 +276,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('Should map the pdf data correctly for: iShsII-Dev.Mkts Prop.Yld U.ETF', () => {
-      const activities = traderepublic.parsePages(dividendSamples[3])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[3]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -310,8 +299,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('Should map the pdf data correctly for: Gazprom with third party expenses and withholding tax', () => {
-      const activities = traderepublic.parsePages(dividendSamples[4])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[4]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -332,8 +322,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('Should map the pdf data correctly for: Realty Income Corp with other withholding tax format', () => {
-      const activities = traderepublic.parsePages(dividendSamples[5])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[5]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -354,8 +345,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('Should map the pdf data correctly for: Unilever with other withholding tax format', () => {
-      const activities = traderepublic.parsePages(dividendSamples[6])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[6]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -374,8 +366,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('New Dividend Date Format starting in 2020: 2020_walgreens_boots_alliance', () => {
-      const activities = traderepublic.parsePages(dividendSamples[7])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[7]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -396,8 +389,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('New Dividend Date Format starting in 2020: 2020_exxon_mobile_corp', () => {
-      const activities = traderepublic.parsePages(dividendSamples[8])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[8]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -418,8 +412,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('Should map the pdf data correctly for: 2020_schlumberger', () => {
-      const activities = traderepublic.parsePages(dividendSamples[9])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[9]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -440,8 +435,9 @@ describe('Broker: Trade Republic', () => {
     });
 
     test('Should map the pdf data correctly for: 2021_reinvest_main_street_capital', () => {
-      const activities = traderepublic.parsePages(dividendSamples[10])
-        .activities;
+      const activities = traderepublic.parsePages(
+        dividendSamples[10]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({

@@ -101,7 +101,13 @@ export const canParseDocument = (pages, extension) => {
   const firstPageContent = pages[0];
   return (
     extension === 'pdf' &&
-    firstPageContent.some(line => line.toLowerCase().includes('peaks'))
+    firstPageContent.some(
+      line =>
+        line.toLowerCase().includes('peaks') ||
+        line === 'Deine Transaktionen in dieser Periode' ||
+        line === 'Auszahlung Dividenden' ||
+        line === 'Dein Wechselgeld'
+    )
   );
 };
 

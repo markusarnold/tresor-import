@@ -1,5 +1,5 @@
-import { findImplementation } from '@/index';
 import * as fondsdepotbank from '../../src/brokers/fondsdepotbank';
+import { validateAllSamples } from '../setup/brokers';
 import {
   buySamples,
   sellSamples,
@@ -10,22 +10,7 @@ import {
 describe('Broker: fondsdepotbank', () => {
   let consoleErrorSpy;
 
-  describe('Check all documents', () => {
-    test('Can one page parsed with fondsdepotbank', () => {
-      allSamples.forEach(pages => {
-        expect(fondsdepotbank.canParseDocument(pages, 'pdf')).toEqual(true);
-      });
-    });
-
-    test('Can identify a broker from one page as fondsdepotbank', () => {
-      allSamples.forEach(pages => {
-        const implementations = findImplementation(pages, 'pdf');
-
-        expect(implementations.length).toEqual(1);
-        expect(implementations[0]).toEqual(fondsdepotbank);
-      });
-    });
-  });
+  validateAllSamples(fondsdepotbank, allSamples);
 
   describe('Validate buys', () => {
     test('Can the order parsed from single buy', () => {
@@ -167,8 +152,9 @@ describe('Broker: fondsdepotbank', () => {
 
   describe('Validate dividends', () => {
     test('Can the dividend in EUR parsed from the document', () => {
-      const activities = fondsdepotbank.parsePages(dividendSamples[0])
-        .activities;
+      const activities = fondsdepotbank.parsePages(
+        dividendSamples[0]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -188,8 +174,9 @@ describe('Broker: fondsdepotbank', () => {
     });
 
     test('Can the dividend in EUR parsed from the document with taxes', () => {
-      const activities = fondsdepotbank.parsePages(dividendSamples[1])
-        .activities;
+      const activities = fondsdepotbank.parsePages(
+        dividendSamples[1]
+      ).activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({

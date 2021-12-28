@@ -1,24 +1,9 @@
 import * as quirion from '../../src/brokers/quirion';
-import { findImplementation } from '@/index';
+import { validateAllSamples } from '../setup/brokers';
 import { allSamples, buySamples, dividendSamples } from './__mocks__/quirion';
 
 describe('Broker: quirion', () => {
-  describe('Check all documents', () => {
-    test('Can one page parsed with quirion', () => {
-      allSamples.forEach(pages => {
-        expect(quirion.canParseDocument(pages, 'pdf')).toEqual(true);
-      });
-    });
-
-    test('Can identify a broker from one page as quirion', () => {
-      allSamples.forEach(pages => {
-        const implementations = findImplementation(pages, 'pdf');
-
-        expect(implementations.length).toEqual(1);
-        expect(implementations[0]).toEqual(quirion);
-      });
-    });
-  });
+  validateAllSamples(quirion, allSamples);
 
   describe('Validate buys', () => {
     test('Can parse a Kontoauszug', () => {

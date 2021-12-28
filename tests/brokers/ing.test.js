@@ -1,5 +1,6 @@
-import { findImplementation } from '../../src';
 import * as ing from '../../src/brokers/ing';
+import { findImplementation } from '../../src';
+import { validateAllSamples } from '../setup/brokers';
 import {
   buySamples,
   sellSamples,
@@ -20,22 +21,9 @@ describe('Broker: ING', () => {
     depotStatement
   );
 
+  validateAllSamples(ing, allSamples);
+
   describe('Check all documents', () => {
-    test('Can the document parsed with ING', () => {
-      allSamples.forEach(pages => {
-        expect(ing.canParseDocument(pages, 'pdf')).toEqual(true);
-      });
-    });
-
-    test('Can identify a implementation from the document as ING', () => {
-      allSamples.forEach(pages => {
-        const implementations = findImplementation(pages, 'pdf');
-
-        expect(implementations.length).toEqual(1);
-        expect(implementations[0]).toEqual(ing);
-      });
-    });
-
     test('Should not identify ing as broker if ing BIC is not present', () => {
       invalidSamples.forEach(pages => {
         const implementations = findImplementation(pages, 'pdf');

@@ -1,5 +1,5 @@
-import { findImplementation } from '@/index';
 import * as cortalconsors from '../../src/brokers/cortalconsors';
+import { validateAllSamples } from '../setup/brokers';
 import {
   allSamples,
   buySamples,
@@ -10,22 +10,7 @@ import {
 describe('Broker: Cortal Consors', () => {
   let consoleErrorSpy;
 
-  describe('Check all documents', () => {
-    test('Can one page parsed with cortal consors', () => {
-      allSamples.forEach(pages => {
-        expect(cortalconsors.canParseDocument(pages, 'pdf')).toEqual(true);
-      });
-    });
-
-    test('Can identify a broker from one page as cortal consors', () => {
-      allSamples.forEach(pages => {
-        const implementations = findImplementation(pages, 'pdf');
-
-        expect(implementations.length).toEqual(1);
-        expect(implementations[0]).toEqual(cortalconsors);
-      });
-    });
-  });
+  validateAllSamples(cortalconsors, allSamples);
 
   describe('Buy', () => {
     test('Can parse 2005 Acatis buy', () => {
@@ -156,8 +141,9 @@ describe('Broker: Cortal Consors', () => {
 
   describe('Dividend', () => {
     test('Should map the document correctly: 2014_allianz', () => {
-      const activities = cortalconsors.parsePages(dividendSamples[0])
-        .activities;
+      const activities = cortalconsors.parsePages(
+        dividendSamples[0]
+      ).activities;
 
       expect(activities).toEqual([
         {
@@ -177,8 +163,9 @@ describe('Broker: Cortal Consors', () => {
     });
 
     test('Should map the document correctly: 2014_etf_x-tracke', () => {
-      const activities = cortalconsors.parsePages(dividendSamples[1])
-        .activities;
+      const activities = cortalconsors.parsePages(
+        dividendSamples[1]
+      ).activities;
 
       expect(activities).toEqual([
         {
