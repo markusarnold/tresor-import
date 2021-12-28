@@ -1,7 +1,7 @@
 {
   "name": "@tresor.one/import",
   "version": "2.14.2",
-  "description": "Creates Tresor One activities from PDF statements of brokers",
+  "description": "Creates Parqet activities from PDF statements or csv exports from different brokers",
   "files": [
     "dist"
   ],
@@ -20,6 +20,7 @@
     "precommit": "pretty-quick --staged --no-restage && npm run lint && npm t"
   },
   "keywords": [
+    "parqet",
     "tresor",
     "one",
     "pdf",
