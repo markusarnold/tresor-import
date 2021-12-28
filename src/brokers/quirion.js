@@ -9,11 +9,6 @@ import {
   validateActivity,
 } from '@/helper';
 
-const DOCUMENT_TYPES = {
-  Buy: 'Buy',
-  Dividend: 'Dividend',
-};
-
 const BROKER_NAME = 'quirion';
 
 // This is a sample Buy activity:
@@ -84,9 +79,13 @@ const findNextBuy = (flatContent, index) => {
     return undefined;
   }
 
+  /** @type {Importer.ActivityTypeUnion} */
+  let type = 'Buy';
+
+  /** @type {Partial<Importer.Activity>} */
   const activity = {
     broker: BROKER_NAME,
-    type: DOCUMENT_TYPES.Buy,
+    type,
     // No information about fee and tax in the Kontoauszug
     fee: 0,
     tax: 0,
@@ -310,9 +309,12 @@ const findDividendCompany = content => {
 };
 
 const createActivitiesForDividend = flatContent => {
+  /** @type {Importer.ActivityTypeUnion} */
+  let type = 'Dividend';
+
   const activity = {
     broker: BROKER_NAME,
-    type: DOCUMENT_TYPES.Dividend,
+    type,
     // No information about fee in the Erträgnisabrechnung
     fee: 0,
     company: findDividendCompany(flatContent),
@@ -329,13 +331,13 @@ const createActivitiesForDividend = flatContent => {
   return [validateActivity(activity)];
 };
 
-const parseData = (flatContent, type) => {
-  switch (type) {
-    case DOCUMENT_TYPES.Buy:
-      return createActivitiesForBuy(flatContent);
+const parseData = flatContent => {
+  if (isDocumentBuy(flatContent)) {
+    return createActivitiesForBuy(flatContent);
+  }
 
-    case DOCUMENT_TYPES.Dividend:
-      return createActivitiesForDividend(flatContent);
+  if (isDocumentDividend(flatContent)) {
+    return createActivitiesForDividend(flatContent);
   }
 
   return [];
@@ -362,21 +364,14 @@ const hasClutteredText = (content, startText, length, textToFind) => {
   return combinedText === textToFind;
 };
 
-const getDocumentType = content => {
-  if (content.includes('Kontoauszug')) {
-    return DOCUMENT_TYPES.Buy;
-  }
-
+const isDocumentBuy = content => content.includes('Wertpapier Kauf');
+const isDocumentDividend = content => {
   // We're looking for the following four consecutive entries
   // "Erträ",
   // "gnisabrec",
   // "hn",
   // "ung",
-  if (hasClutteredText(content, 'Erträ', 4, 'Erträgnisabrechnung')) {
-    return DOCUMENT_TYPES.Dividend;
-  }
-
-  return undefined;
+  return hasClutteredText(content, 'Erträ', 4, 'Erträgnisabrechnung');
 };
 
 export const canParseDocument = (pages, extension) => {
@@ -397,14 +392,12 @@ export const canParseDocument = (pages, extension) => {
   return (
     extension === 'pdf' &&
     isQuirinCompany &&
-    getDocumentType(firstPageContent) !== undefined
+    (isDocumentBuy(firstPageContent) || isDocumentDividend(firstPageContent))
   );
 };
 
 export const parsePages = contents => {
-  const type = getDocumentType(contents[0]);
-
-  const activities = parseData(contents.flat(), type);
+  const activities = parseData(contents.flat());
 
   if (!activities.length) {
     return {
@@ -418,3 +411,5 @@ export const parsePages = contents => {
     status: 0,
   };
 };
+
+export const parsingIsTextBased = () => true;
