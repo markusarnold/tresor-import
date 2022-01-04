@@ -64,7 +64,7 @@ describe('DKB broker', () => {
         shares: 0.7419,
         price: 353.8346,
         amount: 262.5,
-        fee: 1.5,
+        fee: -11,
         tax: 0,
       });
     });
