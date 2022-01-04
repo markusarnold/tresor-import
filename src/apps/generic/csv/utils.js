@@ -102,6 +102,7 @@ const parseTypeString = value => {
   const allTypes = validTypes();
   const typeIndex = allTypes.findIndex(type => type.toLowerCase() === value);
   if (typeIndex >= 0) {
+    // For the givven type we matched a valid type. Lets return them here.
     return allTypes[typeIndex];
   }
 
