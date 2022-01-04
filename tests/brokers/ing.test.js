@@ -507,6 +507,27 @@ describe('Broker: ING', () => {
         foreignCurrency: 'USD',
       });
     });
+
+    test('Can parse document: 2021_IE00BK1PV551', () => {
+      const activities = ing.parsePages(dividendsSamples[10]).activities;
+
+      expect(activities.length).toEqual(1);
+      expect(activities[0]).toEqual({
+        broker: 'ing',
+        type: 'Dividend',
+        date: '2021-09-30',
+        datetime: '2021-09-30T' + activities[0].datetime.substring(11),
+        isin: 'IE00BK1PV551',
+        company: 'Xtr.(IE) - MSCI World Registered Shares 1D o.N.',
+        shares: 490,
+        price: 0.2850017198379645,
+        amount: 139.64739442393187,
+        fee: 0,
+        tax: 25.78,
+        fxRate: 1.159993,
+        foreignCurrency: 'USD',
+      });
+    });
   });
 
   describe('Payback', () => {
