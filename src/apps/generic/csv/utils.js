@@ -88,7 +88,7 @@ const parseCurrency = (value, defaultValue) => {
 };
 
 /**
- *
+ * Try to parse a string value for a activity type to a valid activity type e.g. buy -> Buy.
  * @param {string} value
  * @returns {string | undefined}
  */
