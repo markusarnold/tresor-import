@@ -1,5 +1,5 @@
-import { findImplementation } from '../../src';
 import * as dkb from '../../src/brokers/dkb';
+import { validateAllSamples } from '../setup/brokers';
 import {
   buySamples,
   sellSamples,
@@ -12,22 +12,7 @@ import {
 describe('DKB broker', () => {
   let consoleErrorSpy;
 
-  describe('Check all documents', () => {
-    test('Can the document parsed with DKB', () => {
-      allSamples.forEach(pages => {
-        expect(dkb.canParseDocument(pages, 'pdf')).toEqual(true);
-      });
-    });
-
-    test('Can identify a implementation from the document as DKB', () => {
-      allSamples.forEach(pages => {
-        const implementations = findImplementation(pages, 'pdf');
-
-        expect(implementations.length).toEqual(1);
-        expect(implementations[0]).toEqual(dkb);
-      });
-    });
-  });
+  validateAllSamples(dkb, allSamples);
 
   describe('Buy', () => {
     test('should map pdf data of sample 1 correctly', () => {
@@ -79,7 +64,7 @@ describe('DKB broker', () => {
         shares: 0.7419,
         price: 353.8346,
         amount: 262.5,
-        fee: 1.5,
+        fee: -11,
         tax: 0,
       });
     });

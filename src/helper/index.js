@@ -20,7 +20,7 @@ export const getGermanDate = content => {
 
 /**
  *
- * @param {Importer.page | string} content
+ * @param {Importer.Page | string} content
  * @param {boolean} [trimAndSplit=false]
  * @returns {string}
  */

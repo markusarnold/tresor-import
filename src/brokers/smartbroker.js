@@ -61,7 +61,7 @@ const findTax = (textArr, fxRate) => {
 
 /**
  *
- * @param {Importer.page} content
+ * @param {Importer.Page} content
  * @returns {[number?, string?]}
  */
 const findFxRateAndForeignCurrency = content => {

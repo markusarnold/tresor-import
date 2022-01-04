@@ -7,8 +7,10 @@ import {
   validateActivity,
 } from '@/helper';
 
-const getValueByPreviousElement = (textArr, prev) => {
-  const index = textArr.findIndex(t => t.includes(prev));
+const getValueByPreviousElement = (textArr, prev, startsWith = false) => {
+  const index = textArr.findIndex(t =>
+    !startsWith ? t.includes(prev) : t.startsWith(prev)
+  );
   if (index < 0) {
     return '';
   }
@@ -121,6 +123,15 @@ const findFee = pages => {
     );
     if (transferValue !== '') {
       totalFee = totalFee.plus(Big(parseGermanNum(transferValue)));
+    }
+
+    const discountValue = getValueByPreviousElement(
+      page,
+      'Kundenbonifikation ',
+      true
+    );
+    if (discountValue !== '') {
+      totalFee = totalFee.minus(Big(parseGermanNum(discountValue)));
     }
   });
 
