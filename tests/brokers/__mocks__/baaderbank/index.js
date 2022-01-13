@@ -15,6 +15,7 @@ export const buySamples = [
 export const sellSamples = [
   require('./sell/market_order.json'),
   require('./sell/2021_finanzen.net_LU0496786574.json'),
+  require('./sell/2021_smavesto_DE0006289473.json'),
 ];
 
 export const dividendSamples = [
