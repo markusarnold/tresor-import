@@ -160,5 +160,51 @@ describe('Broker: sBroker27', () => {
         },
       ]);
     });
+
+    test('Can parse document: 2021_US3765361080', () => {
+      const result = sbroker.parsePages(dividendSamples[3]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities).toEqual([
+        {
+          broker: 'sBroker',
+          type: 'Dividend',
+          date: '2021-11-30',
+          datetime: '2021-11-30T' + result.activities[0].datetime.substring(11),
+          isin: 'US3765361080',
+          wkn: '260884',
+          company: 'GLADSTONE COMMERCIAL CORP. REGISTERED SHARES DL -,01',
+          shares: 60,
+          price: 0.11019283746556474,
+          amount: 6.6115702479338845,
+          fee: 0,
+          tax: 1.6815702479338843,
+          fxRate: 1.1374,
+          foreignCurrency: 'USD',
+        },
+      ]);
+    });
+
+    test('Can parse document: 2021_DE000ETFL508', () => {
+      const result = sbroker.parsePages(dividendSamples[4]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities).toEqual([
+        {
+          broker: 'sBroker',
+          type: 'Dividend',
+          date: '2021-12-10',
+          datetime: '2021-12-10T' + result.activities[0].datetime.substring(11),
+          isin: 'DE000ETFL508',
+          wkn: 'ETFL50',
+          company: 'DEKA MSCI WORLD UCITS ETF INHABER-ANTEILE',
+          shares: 46.4177,
+          price: 0.07001639460809131,
+          amount: 3.25,
+          fee: 0,
+          tax: 0.6,
+        },
+      ]);
+    });
   });
 });

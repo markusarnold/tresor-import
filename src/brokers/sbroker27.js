@@ -109,9 +109,13 @@ const findAmount = (/** @type {Importer.Page} */ content) => {
 };
 
 const findAmountPayoutGross = (/** @type {Importer.Page} */ content) => {
-  return Big(
-    parseGermanNum(content[content.indexOf('Dividendengutschrift') + 1])
-  );
+  let lineNumber = content.indexOf('Dividendengutschrift');
+
+  if (lineNumber < 0) {
+    lineNumber = content.lastIndexOf('Aussch') + 2;
+  }
+
+  return Big(parseGermanNum(content[lineNumber + 1]));
 };
 
 const findAmountPayoutNet = (/** @type {Importer.Page} */ content) => {
@@ -186,7 +190,16 @@ const isBuy = (/** @type {Importer.Page} */ content) => {
 };
 
 const isDividend = (/** @type {Importer.Page} */ content) => {
-  return content.indexOf('Dividendengutschrift') > 0;
+  if (content.indexOf('Dividendengutschrift') > 0) {
+    return true;
+  }
+
+  const lineNumber = content.indexOf('Investmentfonds');
+
+  return (
+    lineNumber > 3 &&
+    content.slice(lineNumber - 3, lineNumber).join('') === 'Ausschüttung'
+  );
 };
 
 export const canParseDocument = (
