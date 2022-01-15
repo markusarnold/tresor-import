@@ -1,5 +1,3 @@
-import every from 'lodash/every';
-import values from 'lodash/values';
 import { DateTime } from 'luxon';
 import { ParqetActivityValidationError } from '@/errors';
 
@@ -110,7 +108,7 @@ export function findPreviousRegexMatchIdx(arr, idx, regex) {
 
 function validateCommons(activity) {
   // All fields must have a value unequal undefined
-  if (!every(values(activity), a => !!a || a === 0)) {
+  if (!Object.values(activity).every(a => !!a || a === 0)) {
     throw new ParqetActivityValidationError(
       'Invalid fields. Activity must not contain fields with undefined, or empty values.',
       activity,
