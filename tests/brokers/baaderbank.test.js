@@ -263,6 +263,25 @@ describe('Broker: scalable.capital', () => {
         tax: 0.44,
       });
     });
+
+    test('Can parse document: 2021_smavesto_DE0006289473', () => {
+      const activities = baaderBank.parsePages(sellSamples[2]).activities;
+
+      expect(activities.length).toEqual(1);
+      expect(activities[0]).toEqual({
+        broker: 'smavesto',
+        type: 'Sell',
+        date: '2021-08-31',
+        datetime: '2021-08-31T15:30:16.000Z',
+        isin: 'DE0006289473',
+        company: 'iS.eb.r.Go.G.1.5-2.5y U.ETF DE Inhaber-Anteile EUR (Dist)',
+        shares: 0.025,
+        price: 82.51,
+        amount: 2.06,
+        fee: 0,
+        tax: 0,
+      });
+    });
   });
 
   describe('Validate dividends', () => {

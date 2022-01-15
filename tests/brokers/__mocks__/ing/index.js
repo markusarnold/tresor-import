@@ -29,6 +29,7 @@ export const dividendsSamples = [
   require('./dividend/waste_management_with_taxes.json'),
   require('./dividend/HKD_byd_co_ltd_with_taxes.json'),
   require('./dividend/2021_US3682872078.json'),
+  require('./dividend/2021_IE00BK1PV551.json'),
 ];
 
 export const depotStatement = [

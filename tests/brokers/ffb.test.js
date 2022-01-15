@@ -1,5 +1,5 @@
-import { findImplementation } from '@/index';
 import * as ffb from '../../src/brokers/ffb';
+import { validateAllSamples } from '../setup/brokers';
 import {
   buySamples,
   sellSamples,
@@ -13,21 +13,7 @@ import {
 describe('Broker: ffb', () => {
   let consoleErrorSpy;
 
-  describe('Check all documents', () => {
-    test('Can one page parsed with ffb', () => {
-      allSamples.forEach(pages => {
-        expect(ffb.canParseDocument(pages, 'pdf')).toEqual(true);
-      });
-    });
-
-    test('Can identify a broker from one page as ffb', () => {
-      allSamples.forEach(pages => {
-        const implementations = findImplementation(pages, 'pdf');
-        expect(implementations.length).toEqual(1);
-        expect(implementations[0]).toEqual(ffb);
-      });
-    });
-  });
+  validateAllSamples(ffb, allSamples);
 
   describe('Validate buys', () => {
     test('Should map pdf data of sample correctly: saving_plan', () => {

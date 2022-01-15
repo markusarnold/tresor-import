@@ -47,6 +47,10 @@ const getBroker = content => {
   ) {
     return 'scalablecapital';
   }
+
+  if (content.some(line => line.includes('Smavesto GmbH'))) {
+    return 'smavesto';
+  }
 };
 
 const findOrderDate = content => {

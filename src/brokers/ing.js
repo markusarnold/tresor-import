@@ -281,9 +281,7 @@ const findTaxes = content => {
 
     // Normaly the tax amount is in the line after the tax title
     let offset = 2;
-    if (line.endsWith('%')) {
-      offset = 2;
-    } else if (!line.endsWith('%') && !content[lineNumber + 2].endsWith('%')) {
+    if (!line.endsWith('%') && !content[lineNumber + 2].endsWith('%')) {
       // but sometimes the line after contains only a %
       // Kapitalertragsteuer 25,00  // <- variable line
       // %
@@ -298,6 +296,15 @@ const findTaxes = content => {
       // EUR
       // 74,29                      // <- tax amount
       offset = 4;
+    } else if (line.endsWith('%') && content[lineNumber + 1].endsWith('%')) {
+      // but sometimes the line after contains only a % and the line after this the percentage
+      // KapSt anteilig 50,00 %     // <- variable line
+      // 25,00%
+      // EUR
+      // 74,29                      // <- tax amount
+      offset = 3;
+    } else if (line.endsWith('%')) {
+      offset = 2;
     }
 
     if (!content[lineNumber + offset].includes(',')) {
