@@ -10,7 +10,7 @@ import {
 describe('Broker: fondsdepotbank', () => {
   let consoleErrorSpy;
 
-  validateAllSamples(fondsdepotbank, allSamples);
+  validateAllSamples(fondsdepotbank, allSamples, 'fondsdepotbank');
 
   describe('Validate buys', () => {
     test('Can the order parsed from single buy', () => {
@@ -152,9 +152,8 @@ describe('Broker: fondsdepotbank', () => {
 
   describe('Validate dividends', () => {
     test('Can the dividend in EUR parsed from the document', () => {
-      const activities = fondsdepotbank.parsePages(
-        dividendSamples[0]
-      ).activities;
+      const activities = fondsdepotbank.parsePages(dividendSamples[0])
+        .activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
@@ -174,9 +173,8 @@ describe('Broker: fondsdepotbank', () => {
     });
 
     test('Can the dividend in EUR parsed from the document with taxes', () => {
-      const activities = fondsdepotbank.parsePages(
-        dividendSamples[1]
-      ).activities;
+      const activities = fondsdepotbank.parsePages(dividendSamples[1])
+        .activities;
 
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({

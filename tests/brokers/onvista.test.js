@@ -17,7 +17,7 @@ console.error = jest.fn();
 describe('Broker: onvista', () => {
   let multiPageResult;
 
-  validateAllSamples(onvista, allSamples);
+  validateAllSamples(onvista, allSamples, 'onvista');
 
   describe('Multiple Pages', () => {
     test('should parse a PDF with multiple bills', () => {
@@ -614,9 +614,8 @@ describe('Broker: onvista', () => {
 
   describe('Portfolio Overview', () => {
     test('Should map the overview to transfer in activities', () => {
-      const activities = onvista.parsePages(
-        portfolioOverviewSamples[0]
-      ).activities;
+      const activities = onvista.parsePages(portfolioOverviewSamples[0])
+        .activities;
 
       expect(activities.length).toEqual(10);
       expect(activities.slice(0, 2)).toEqual([

@@ -10,7 +10,7 @@ import {
 describe('Broker: 1822direkt', () => {
   let consoleErrorSpy;
 
-  validateAllSamples(_1822direkt, allSamples);
+  validateAllSamples(_1822direkt, allSamples, '1882direkt');
 
   describe('Validate buys', () => {
     test('Can the direct market order parsed from the document', () => {
