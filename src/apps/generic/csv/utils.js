@@ -141,6 +141,7 @@ export const FIELD_MAP = new Map([
   ],
   ['price', { fieldName: 'price', parserFunc: parseDecimal }],
   ['shares', { fieldName: 'shares', parserFunc: parseDecimal }],
+  ['amount', { fieldName: 'amount', parserFunc: parseDecimal }],
   ['tax', { fieldName: 'tax', parserFunc: parseDecimal, defaultValue: 0 }],
   ['fee', { fieldName: 'fee', parserFunc: parseDecimal, defaultValue: 0 }],
   ['type', { fieldName: 'type', parserFunc: parseSimpleString }],
