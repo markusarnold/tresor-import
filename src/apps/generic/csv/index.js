@@ -126,6 +126,10 @@ const parseRow = (lowerCaseHeaders, row) => {
       .toISO();
   }
 
+  if (!activity.date && activity.datetime) {
+    activity.date = new Date(activity.datetime).toISOString().split('T')[0];
+  }
+
   if (!activity.holding && !activity.isin && !activity.wkn) {
     throw new ParqetActivityValidationError(
       `Invalid activity. One of holding, isin, or wkn must be supplied.`,
