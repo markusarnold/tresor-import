@@ -223,6 +223,25 @@ describe('Broker: scalable.capital', () => {
         tax: 0,
       });
     });
+
+    test('Can parse document: 2021_finanzen.net_IE00B8GKDB10', () => {
+      const activities = baaderBank.parsePages(buySamples[11]).activities;
+
+      expect(activities.length).toEqual(1);
+      expect(activities[0]).toEqual({
+        broker: 'finanzen.zero',
+        type: 'Buy',
+        date: '2022-01-25',
+        datetime: '2022-01-25T15:37:13.000Z',
+        isin: 'IE00B8GKDB10',
+        company: 'Vang.FTSE A.-Wo.Hi.Di.Yi.U.ETF Registered Shares USD Dis.oN',
+        shares: 5,
+        price: 56.2,
+        amount: 281,
+        fee: 1,
+        tax: 0,
+      });
+    });
   });
 
   describe('Validate sells', () => {

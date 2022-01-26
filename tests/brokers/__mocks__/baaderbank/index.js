@@ -10,6 +10,7 @@ export const buySamples = [
   require('./buy/2021_scalable_adidas_ag.json'),
   require('./buy/2021_finanzen.net_IE00BM67HT60.json'),
   require('./buy/2021_finanzen.net_DE000A1YC996.json'),
+  require('./buy/2022_finanzen.net_IE00B8GKDB10.json'),
 ];
 
 export const sellSamples = [
