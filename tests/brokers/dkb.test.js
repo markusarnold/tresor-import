@@ -372,6 +372,24 @@ describe('DKB broker', () => {
         tax: 0,
       });
     });
+
+    test('Should map the document correctly: 2021_FR0000120271.json', () => {
+      const activities = dkb.parsePages(dividendsSamples[7]).activities;
+
+      expect(activities[0]).toEqual({
+        broker: 'dkb',
+        type: 'Dividend',
+        date: '2022-01-13',
+        datetime: '2022-01-13T' + activities[0].datetime.substring(11),
+        isin: 'FR0000120271',
+        company: 'TOTALENERGIES SE ACTIONS AU PORTEUR EO 2,50',
+        shares: 135,
+        price: 0.66,
+        amount: 89.1,
+        fee: 0,
+        tax: 22.87,
+      });
+    });
   });
 
   describe('Savings Plan Summary', () => {

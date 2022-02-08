@@ -172,15 +172,19 @@ const findPayout = (content, baseCurrency) => {
     payoutLineIndex + 5
   );
 
-  // Search for baseCurrency and payout in same line e.g. 1.11+ EUR
+  // Search for baseCurrency, payout value is always above that line
   let payoutIndex = currencyAndPayoutLines.findIndex(
-    line => line.includes(baseCurrency) && line !== baseCurrency
+    line => line === baseCurrency
   );
 
   if (payoutIndex === -1) {
-    // Search for baseCurrency, payout value is always above that line
-    payoutIndex =
-      currencyAndPayoutLines.findIndex(line => line === baseCurrency) - 1;
+    // Search for baseCurrency and payout in same line e.g. 1.11+ EUR
+    payoutIndex = currencyAndPayoutLines.findIndex(
+      line => line.includes(baseCurrency) && line !== baseCurrency
+    );
+  } else {
+    // Reduce the line number of one to get the amount because we currently have the currency line.
+    payoutIndex--;
   }
 
   const payout = currencyAndPayoutLines[payoutIndex];
@@ -367,7 +371,7 @@ export const canParseDocument = (pages, extension) => {
       // Some documents have the BIC inside
       (allPages.some(line => line.includes('BIC BYLADEM1001')) ||
         // And some in the first line the Zip-Code and City. For multipage documents the information are on line two.
-        allPages.slice(0, 3).some(line => line === '10919 Berlin')) &&
+        allPages.slice(0, 5).some(line => line === '10919 Berlin')) &&
       getDocumentType(allPages) !== undefined) ||
     // This is the case for savings plan summaries, they don't contain the strings above.
     allPages.includes('Im Abrechnungszeitraum angelegter Betrag')
