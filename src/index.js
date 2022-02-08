@@ -72,7 +72,13 @@ export function parseActivitiesFromPages(pages, fileName, extension) {
   if (extension === 'pdf') {
     parsePagesResult = impl.parsePages(pages);
   } else if (extension === 'csv') {
-    parsePagesResult = impl.parsePages(JSON.parse(csvLinesToJSON(pages[0])));
+    let content = pages[0];
+
+    if (!impl.parsingIsTextBased()) {
+      content = JSON.parse(csvLinesToJSON(content));
+    }
+
+    parsePagesResult = impl.parsePages(content);
   }
 
   if (!parsePagesResult.activities.length)
