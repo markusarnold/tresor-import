@@ -18,12 +18,13 @@ export const canParseDocument = (doc, extension) =>
     // check if all required fields are present
     return (
       (l.includes('datetime') || l.includes('date')) &&
-      l.includes('price') &&
-      l.includes('shares') &&
       l.includes('tax') &&
       l.includes('fee') &&
       l.includes('type') &&
-      (l.includes('holding') || l.includes('isin') || l.includes('wkn'))
+      (l.includes('holding') || l.includes('isin') || l.includes('wkn')) &&
+      // Check the fields for security activity ot cash acitivty
+      ((l.includes('price') && l.includes('shares')) ||
+        (l.includes('amount') && l.includes('holding')))
     );
   });
 
@@ -125,6 +126,10 @@ const parseRow = (lowerCaseHeaders, row) => {
       .toISO();
   }
 
+  if (!activity.date && activity.datetime) {
+    activity.date = new Date(activity.datetime).toISOString().split('T')[0];
+  }
+
   if (!activity.holding && !activity.isin && !activity.wkn) {
     throw new ParqetActivityValidationError(
       `Invalid activity. One of holding, isin, or wkn must be supplied.`,
@@ -134,9 +139,14 @@ const parseRow = (lowerCaseHeaders, row) => {
   }
 
   if (!!activity.price && !!activity.shares) {
+    // It's a secuirty activity. Lets calculate the amount based on shares and price
     const p = new Big(activity.price);
     const s = new Big(activity.shares);
     activity.amount = +p.times(s);
+  } else if (!!activity.amount && !!activity.holding) {
+    // It's a cash activity. The input don't require columns for price and shares. Lets add them here.
+    activity.price = 1;
+    activity.shares = activity.amount;
   }
 
   return validateActivity(activity);

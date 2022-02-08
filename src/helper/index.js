@@ -223,10 +223,11 @@ export function validateActivity(activity, findSecurityAlsoByCompany = false) {
     ((findSecurityAlsoByCompany && activity.company === undefined) ||
       !findSecurityAlsoByCompany) &&
     activity.isin === undefined &&
-    activity.wkn === undefined
+    activity.wkn === undefined &&
+    activity.holding === undefined
   ) {
     throw new ParqetActivityValidationError(
-      `Invalid fields. Activity must contain one of 'isin', 'wkn' or 'company'.`,
+      `Invalid fields. Activity must contain one of 'isin', 'wkn', 'company' or 'holding'.`,
       activity,
       6
     );
