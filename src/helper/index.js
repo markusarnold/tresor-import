@@ -233,7 +233,7 @@ export function validateActivity(activity, findSecurityAlsoByCompany = false) {
     );
   }
 
-  if (activity.isin !== undefined && !isinRegex.test(activity.isin)) {
+  if (!!activity.isin && !isinRegex.test(activity.isin)) {
     throw new ParqetActivityValidationError(
       `Invalid 'isin'. Invalid scheme for 'isin' field value.`,
       activity,
@@ -241,7 +241,7 @@ export function validateActivity(activity, findSecurityAlsoByCompany = false) {
     );
   }
 
-  if (activity.wkn !== undefined && !/^([A-Z0-9]{6})$/.test(activity.wkn)) {
+  if (!!activity.wkn && !/^([A-Z0-9]{6})$/.test(activity.wkn)) {
     throw new ParqetActivityValidationError(
       `Invalid 'wkn'. Invalid scheme for 'wkn' field value.`,
       activity,
@@ -257,6 +257,14 @@ export function validateActivity(activity, findSecurityAlsoByCompany = false) {
       `Invalid 'type'. Activity 'type' field value must be one of [${at.join(
         ', '
       )}].`,
+      activity,
+      6
+    );
+  }
+
+  if (!!activity.currency && !/^([A-Z]{3})$/.test(activity.currency)) {
+    throw new ParqetActivityValidationError(
+      `Invalid 'currency'. Invalid scheme for 'currency' field value.`,
       activity,
       6
     );
