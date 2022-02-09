@@ -207,6 +207,25 @@ describe('Broker: ING', () => {
         tax: 0,
       });
     });
+
+    test('Can parse statement: 2021_FR0000120578', () => {
+      const activities = ing.parsePages(buySamples[9]).activities;
+
+      expect(activities.length).toEqual(1);
+      expect(activities[0]).toEqual({
+        broker: 'ing',
+        type: 'Buy',
+        date: '2021-08-18',
+        datetime: '2021-08-18T08:47:49.000Z',
+        isin: 'FR0000120578',
+        company: 'Sanofi S.A. Actions Port. EO 2 Nominale',
+        shares: 155,
+        price: 89.85,
+        amount: 13926.75,
+        fee: 39.72,
+        tax: 41.78,
+      });
+    });
   });
 
   describe('Sell', () => {

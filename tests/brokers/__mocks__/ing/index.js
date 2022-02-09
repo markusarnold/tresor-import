@@ -8,6 +8,7 @@ export const buySamples = [
   require('./buy/2020_ark_etf.json'),
   require('./buy/2020_newborn_acquisition.json'),
   require('./buy/2020_DE0007100000.json'),
+  require('./buy/2021_FR0000120578.json'),
 ];
 
 export const sellSamples = [
