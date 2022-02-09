@@ -274,7 +274,8 @@ const findTaxes = content => {
     if (
       !line.includes('steuer ') &&
       !line.includes('zuschlag ') &&
-      !line.includes('st anteilig')
+      !line.includes('st anteilig') &&
+      !line.includes('transaktionssteuer')
     ) {
       continue;
     }

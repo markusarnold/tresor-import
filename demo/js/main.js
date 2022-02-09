@@ -118,6 +118,7 @@ new Vue({
         parseFile(file).then(parsedFile => {
           const result = parseActivitiesFromPages(
             parsedFile.pages,
+            file.name,
             parsedFile.extension
           );
 
