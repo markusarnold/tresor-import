@@ -331,6 +331,44 @@ describe('Broker: DEGIRO', () => {
         tax: 0,
       });
     });
+
+    test('Can parse document: 2022_degiro.ch.json', () => {
+      const activities = degiro.parsePages(transactionLog[10]).activities;
+
+      expect(activities.length).toEqual(10);
+      expect(activities[0]).toEqual({
+        broker: 'degiro',
+        type: 'Buy',
+        date: '2022-02-07',
+        datetime: '2022-02-07T08:26:00.000Z',
+        isin: 'LU0908500753',
+        company: 'LYXOR STOXX EUROPE 600 (DR) UCITS ETF',
+        shares: 3,
+        price: 210.56333333333333,
+        amount: 631.69,
+        fee: 2.65,
+        tax: 0,
+        currency: 'CHF',
+        foreignCurrency: 'EUR',
+        fxRate: 0.9452,
+      });
+      expect(activities[9]).toEqual({
+        broker: 'degiro',
+        type: 'Sell',
+        date: '2022-01-18',
+        datetime: '2022-01-18T08:06:00.000Z',
+        isin: 'DE0002635307',
+        company: 'ISHARES STOXX EUROPE 600 UCITS ETF (DE)',
+        shares: 2,
+        price: 49.62,
+        amount: 99.24,
+        fee: 0,
+        tax: 0,
+        currency: 'CHF',
+        foreignCurrency: 'EUR',
+        fxRate: 0.9588,
+      });
+    });
   });
 
   describe('Validate Depot Overviews', () => {

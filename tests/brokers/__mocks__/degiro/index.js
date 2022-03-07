@@ -9,6 +9,7 @@ export const transactionLog = [
   require('./transactionLog/2020_transaction_log_1.json'),
   require('./transactionLog/buy_only_transactions_it.json'),
   require('./transactionLog/0000_transactions.json'),
+  require('./transactionLog/2022_degiro.ch.json'),
 ];
 
 export const depotOverview = [
