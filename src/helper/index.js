@@ -75,6 +75,15 @@ export function parseGermanNum(n) {
   return parseFloat(n.replace(/\./g, '').replace(',', '.'));
 }
 
+/** @type { (n: string) => number } */
+export function parseSwissNumber(n) {
+  if (!n) {
+    return 0;
+  }
+
+  return parseFloat(n.replace(/,/g, ''));
+}
+
 /**
  * Gives the index for the first match of a regex within a 2D Array. Search is started at an optional offset
  *
