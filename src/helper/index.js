@@ -81,7 +81,7 @@ export function parseSwissNumber(n) {
     return 0;
   }
 
-  return parseFloat(n.replace(/,/g, ''));
+  return parseFloat(n.replace(/[^-0-9.]+/g, ''));
 }
 
 /**
