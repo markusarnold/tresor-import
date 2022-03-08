@@ -287,11 +287,10 @@ const getDocumentType = pdfPages => {
 };
 
 export const canParseDocument = (pdfPages, extension) => {
+  const countries = Object.keys(allowedDegiroCountries);
   return (
     extension === 'pdf' &&
-    pdfPages[0].some(line =>
-      Object.keys(allowedDegiroCountries).includes(line)
-    ) &&
+    pdfPages[0].some(line => countries.includes(line)) &&
     getDocumentType(pdfPages) !== undefined
   );
 };
