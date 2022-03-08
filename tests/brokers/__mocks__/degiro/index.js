@@ -15,6 +15,7 @@ export const transactionLog = [
 export const depotOverview = [
   require('./depotOverview/2021_depot_statement.json'),
   require('./depotOverview/2021_italian.json'),
+  require('./depotOverview/2021_degiro.ch.json'),
 ];
 
 export const allSamples = transactionLog.concat(depotOverview);

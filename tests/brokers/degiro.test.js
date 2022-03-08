@@ -406,6 +406,7 @@ describe('Broker: DEGIRO', () => {
         amount: 11.41,
         fee: 0,
         tax: 0,
+        currency: 'EUR',
       });
       expect(result.activities[5]).toEqual({
         broker: 'degiro',
@@ -419,6 +420,7 @@ describe('Broker: DEGIRO', () => {
         amount: 33.34,
         fee: 0,
         tax: 0,
+        currency: 'EUR',
       });
     });
 
@@ -439,6 +441,28 @@ describe('Broker: DEGIRO', () => {
         amount: 221.45,
         fee: 0,
         tax: 0,
+        currency: 'EUR',
+      });
+    });
+
+    test('Can parse document: 2022_degiro.ch.json', () => {
+      const result = degiro.parsePages(depotOverview[2]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities.length).toEqual(1);
+      expect(result.activities[0]).toEqual({
+        broker: 'degiro',
+        type: 'TransferIn',
+        date: '2021-04-19',
+        datetime: '2021-04-19T' + result.activities[0].datetime.substr(11),
+        isin: 'IE00B4L5Y983',
+        company: 'ISHRC MSCI WLD',
+        shares: 136,
+        price: 80.79,
+        amount: 10102.98,
+        fee: 0,
+        tax: 0,
+        currency: 'CHF',
       });
     });
   });
