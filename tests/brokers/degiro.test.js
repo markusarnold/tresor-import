@@ -27,6 +27,7 @@ describe('Broker: DEGIRO', () => {
         tax: 0,
         foreignCurrency: 'USD',
         fxRate: 1.1024,
+        currency: 'EUR',
       });
       expect(activities[6]).toEqual({
         broker: 'degiro',
@@ -40,6 +41,7 @@ describe('Broker: DEGIRO', () => {
         amount: 19753.76,
         fee: 25.28,
         tax: 0,
+        currency: 'EUR',
       });
     });
 
@@ -63,6 +65,7 @@ describe('Broker: DEGIRO', () => {
         tax: 0,
         fxRate: 10.6185,
         foreignCurrency: 'SEK',
+        currency: 'EUR',
       });
       expect(activities[9]).toEqual({
         broker: 'degiro',
@@ -78,6 +81,7 @@ describe('Broker: DEGIRO', () => {
         tax: 0.52,
         fxRate: 1.1226,
         foreignCurrency: 'USD',
+        currency: 'EUR',
       });
     });
 
@@ -102,6 +106,7 @@ describe('Broker: DEGIRO', () => {
         tax: 0.66,
         fxRate: 1.2124,
         foreignCurrency: 'USD',
+        currency: 'EUR',
       });
       expect(activities[15]).toEqual({
         broker: 'degiro',
@@ -115,6 +120,7 @@ describe('Broker: DEGIRO', () => {
         amount: 601.4,
         fee: 2.66,
         tax: 0,
+        currency: 'EUR',
       });
     });
 
@@ -138,6 +144,7 @@ describe('Broker: DEGIRO', () => {
         tax: 0.83,
         fxRate: 1.216,
         foreignCurrency: 'USD',
+        currency: 'EUR',
       });
       expect(activities[236]).toEqual({
         broker: 'degiro',
@@ -151,6 +158,7 @@ describe('Broker: DEGIRO', () => {
         amount: 999.6,
         tax: 0,
         fee: 2.08,
+        currency: 'EUR',
       });
     });
 
@@ -174,6 +182,7 @@ describe('Broker: DEGIRO', () => {
         tax: 0,
         fxRate: 1.2134,
         foreignCurrency: 'USD',
+        currency: 'EUR',
       });
 
       expect(activities[3]).toEqual({
@@ -190,6 +199,7 @@ describe('Broker: DEGIRO', () => {
         tax: 0,
         fxRate: 1.0766,
         foreignCurrency: 'CHF',
+        currency: 'EUR',
       });
     });
 
@@ -211,6 +221,7 @@ describe('Broker: DEGIRO', () => {
         amount: 99.36,
         fee: 2.11,
         tax: 0,
+        currency: 'EUR',
       });
     });
 
@@ -234,6 +245,7 @@ describe('Broker: DEGIRO', () => {
         shares: 30,
         amount: 2160.6,
         tax: 0,
+        currency: 'EUR',
       });
     });
 
@@ -256,6 +268,7 @@ describe('Broker: DEGIRO', () => {
         amount: 937.25,
         fee: 10.56,
         tax: 0,
+        currency: 'EUR',
       });
     });
 
@@ -277,6 +290,7 @@ describe('Broker: DEGIRO', () => {
         amount: 1596.4,
         fee: 3.76,
         tax: 0,
+        currency: 'EUR',
       });
 
       expect(activities[23]).toEqual({
@@ -291,6 +305,7 @@ describe('Broker: DEGIRO', () => {
         amount: 0.1,
         fee: 0,
         tax: 0,
+        currency: 'EUR',
       });
     });
 
@@ -310,6 +325,7 @@ describe('Broker: DEGIRO', () => {
         amount: 23.73,
         fee: 23.73,
         tax: 0,
+        currency: 'EUR',
       });
     });
 
@@ -329,6 +345,7 @@ describe('Broker: DEGIRO', () => {
         amount: 669.6,
         fee: 2.2,
         tax: 0,
+        currency: 'EUR',
       });
     });
 
