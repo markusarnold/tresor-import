@@ -138,21 +138,24 @@ const parseTransaction = (content, index, numberParser, offset) => {
   return validateActivity(activity);
 };
 
-const parseTransactionLog = pdfPages => {
-  let activities = [];
-
+// Get the current number parser functions based on the Degiro Country.
+const getNumberParserFunction = content => {
   const countries = Object.keys(allowedDegiroCountries);
-
-  // Get the current number parser functions based on the Degiro Country.
-  let numberParser = undefined;
   for (let countryIndex = 0; countryIndex < countries.length; countryIndex++) {
     const country = countries[countryIndex];
-    if (!pdfPages[0].some(line => line.includes(country))) {
+    if (!content.some(line => line.includes(country))) {
       continue;
     }
 
-    numberParser = allowedDegiroCountries[country];
+    return allowedDegiroCountries[country];
   }
+};
+
+const parseTransactionLog = pdfPages => {
+  let activities = [];
+
+  // Get the current number parser functions based on the Degiro Country.
+  let numberParser = getNumberParserFunction(pdfPages[0]);
 
   // Sometimes a reference exchange is given which causes an offset of 1
   let offset = 0;
@@ -200,6 +203,8 @@ const parseTransactionLog = pdfPages => {
 
 const parseDepotStatement = pdfPages => {
   const flattendPages = pdfPages.flat();
+  let numberParser = getNumberParserFunction(pdfPages);
+
   const dateline =
     flattendPages[
       flattendPages.findIndex(
@@ -215,6 +220,14 @@ const parseDepotStatement = pdfPages => {
     undefined,
     'dd-MM-yyyy'
   );
+
+  const currencyLineElements =
+    flattendPages[
+      flattendPages.findIndex(
+        line => line.startsWith('Wert in ') || line.startsWith('Valore in ')
+      )
+    ].split(' ');
+
   let activities = [];
   let isinIdx = findFirstIsinIndexInArray(flattendPages);
   while (isinIdx >= 0) {
@@ -226,12 +239,14 @@ const parseDepotStatement = pdfPages => {
       company: flattendPages[isinIdx - 1],
       date,
       datetime,
-      shares: parseGermanNum(flattendPages[isinIdx + 1]),
-      price: parseGermanNum(flattendPages[isinIdx + 2]),
-      amount: parseGermanNum(flattendPages[isinIdx + 4]),
+      shares: numberParser(flattendPages[isinIdx + 1]),
+      price: numberParser(flattendPages[isinIdx + 2]),
+      amount: numberParser(flattendPages[isinIdx + 4]),
       tax: 0,
       fee: 0,
+      currency: currencyLineElements[2],
     };
+
     if (validateActivity(activity)) {
       activities.push(activity);
     } else {
