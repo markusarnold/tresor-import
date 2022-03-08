@@ -263,7 +263,8 @@ const getDocumentType = pdfPages => {
     pdfPages[0].some(
       line =>
         line.startsWith('Kontoauszug von') ||
-        line.startsWith('Account statement')
+        line.startsWith('Account statement') ||
+        line.startsWith('Estratto conto da')
     )
   ) {
     return 'AccountStatement';
