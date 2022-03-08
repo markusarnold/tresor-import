@@ -1,24 +1,26 @@
 import Big from 'big.js';
 import {
   parseGermanNum,
+  parseSwissNumber,
   validateActivity,
   createActivityDateTime,
   findFirstIsinIndexInArray,
 } from '@/helper';
 import { findFirstRegexIndexInArray } from '../helper';
 
-const allowedDegiroCountries = [
-  'www.degiro.de',
-  'www.degiro.es',
-  'www.degiro.ie',
-  'www.degiro.gr',
-  'www.degiro.it',
-  'www.degiro.pt',
-  'www.degiro.fr',
-  'www.degiro.nl',
-  'www.degiro.at',
-  'www.degiro.fi',
-];
+const allowedDegiroCountries = {
+  'www.degiro.de': parseGermanNum,
+  'www.degiro.es': parseGermanNum,
+  'www.degiro.ie': parseGermanNum,
+  'www.degiro.gr': parseGermanNum,
+  'www.degiro.it': parseGermanNum,
+  'www.degiro.pt': parseGermanNum,
+  'www.degiro.fr': parseGermanNum,
+  'www.degiro.nl': parseGermanNum,
+  'www.degiro.at': parseGermanNum,
+  'www.degiro.fi': parseGermanNum,
+  'www.degiro.ch': parseSwissNumber,
+};
 
 class zeroSharesTransaction extends Error {
   constructor(...params) {
@@ -26,9 +28,25 @@ class zeroSharesTransaction extends Error {
   }
 }
 
+// This will return the number of decimal places of the givven float
+const precisionOfNumber = number => {
+  if (!isFinite(number)) {
+    return 0;
+  }
+
+  let exponent = 1;
+  let precision = 0;
+  while (Math.round(number * exponent) / exponent !== number) {
+    exponent *= 10;
+    precision++;
+  }
+
+  return precision;
+};
+
 const parseTransaction = (content, index, numberParser, offset) => {
   let foreignCurrencyIndex;
-  const numberRegex = /^-?(\d+|\d.\d+)(,\d+)?$/;
+  const numberRegex = /^-{0,1}\d+((,|\.)\d+|)+$/;
 
   let isinIdx = findFirstIsinIndexInArray(content, index);
   const company = content.slice(index + 2, isinIdx).join(' ');
@@ -70,13 +88,22 @@ const parseTransaction = (content, index, numberParser, offset) => {
   const currencyOffset = content.some(line => line === 'Venue') ? 2 : 0;
 
   const currency = content[isinIdx + 3 + offset * 2 + currencyOffset];
-  const baseCurrency = content[isinIdx + 7 + offset * 2 + currencyOffset];
+  const baseCurrencyLineNumber = isinIdx + 7 + offset * 2 + currencyOffset;
+  const baseCurrency = content[baseCurrencyLineNumber];
 
   if (currency !== baseCurrency) {
     activity.foreignCurrency = currency;
-    activity.fxRate = numberParser(
-      content[isinIdx + 9 + offset + currencyOffset]
-    );
+
+    let fxCandidate = numberParser(content[baseCurrencyLineNumber + 1]);
+
+    if (precisionOfNumber(fxCandidate) === 2) {
+      // Thanks for nothing.
+      // Sometimes the amount cames first and then the fx rate. We detect that the current value is the amount, because this will be rounded up to two decimals from degiro. The fx rate has more precision.
+      fxCandidate = numberParser(content[baseCurrencyLineNumber + 2]);
+    }
+
+    activity.fxRate = fxCandidate;
+
     // For foreign currency we need to go one line ahead for the following fields.
     foreignCurrencyIndex = 1;
   } else {
@@ -84,6 +111,7 @@ const parseTransaction = (content, index, numberParser, offset) => {
   }
 
   activity.type = activity.shares > 0 ? 'Buy' : 'Sell';
+  activity.currency = baseCurrency;
   activity.price = +Big(activity.amount).div(activity.shares).abs();
   if (activity.type === 'Buy') {
     activity.fee = Math.abs(
@@ -112,8 +140,20 @@ const parseTransaction = (content, index, numberParser, offset) => {
 
 const parseTransactionLog = pdfPages => {
   let activities = [];
-  // Set another parser if foreign Degiros such as degiro.ch come into place, they will have other number formats.
-  const numberParser = parseGermanNum;
+
+  const countries = Object.keys(allowedDegiroCountries);
+
+  // Get the current number parser functions based on the Degiro Country.
+  let numberParser = undefined;
+  for (let countryIndex = 0; countryIndex < countries.length; countryIndex++) {
+    const country = countries[countryIndex];
+    if (!pdfPages[0].some(line => line.includes(country))) {
+      continue;
+    }
+
+    numberParser = allowedDegiroCountries[country];
+  }
+
   // Sometimes a reference exchange is given which causes an offset of 1
   let offset = 0;
   if (
@@ -204,7 +244,13 @@ const parseDepotStatement = pdfPages => {
 };
 
 const getDocumentType = pdfPages => {
-  if (pdfPages[0].some(line => line.startsWith('Kontoauszug von'))) {
+  if (
+    pdfPages[0].some(
+      line =>
+        line.startsWith('Kontoauszug von') ||
+        line.startsWith('Account statement')
+    )
+  ) {
     return 'AccountStatement';
   } else if (
     pdfPages[0].some(
@@ -228,7 +274,9 @@ const getDocumentType = pdfPages => {
 export const canParseDocument = (pdfPages, extension) => {
   return (
     extension === 'pdf' &&
-    pdfPages[0].some(line => allowedDegiroCountries.includes(line)) &&
+    pdfPages[0].some(line =>
+      Object.keys(allowedDegiroCountries).includes(line)
+    ) &&
     getDocumentType(pdfPages) !== undefined
   );
 };
