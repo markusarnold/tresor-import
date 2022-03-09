@@ -46,7 +46,7 @@ const precisionOfNumber = number => {
 
 const parseTransaction = (content, index, numberParser, offset) => {
   let foreignCurrencyIndex;
-  const numberRegex = /^-{0,1}\d+((,|\.)\d+|)+$/;
+  const numberRegex = /^-{0,1}[\d.,']+((,|\.)\d+|)+$/;
 
   let isinIdx = findFirstIsinIndexInArray(content, index);
   const company = content.slice(index + 2, isinIdx).join(' ');
