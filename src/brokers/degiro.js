@@ -65,12 +65,14 @@ const parseTransaction = (content, index, numberParser, offset) => {
 
   // Sometimes the currency comes first; sometimes the value comes first
   const amountOffset = numberRegex.test(content[sharesIdx + 1]) ? 5 : 6;
+  const shares = numberParser(content[sharesIdx]);
+
   /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'degiro',
     company,
     isin,
-    shares: numberParser(content[sharesIdx]),
+    shares: Math.abs(shares),
     // There is the case where the amount is 0, might be a transfer out or a knockout certificate
     amount: Math.abs(numberParser(content[sharesIdx + amountOffset])),
     tax: 0,
@@ -110,22 +112,20 @@ const parseTransaction = (content, index, numberParser, offset) => {
     foreignCurrencyIndex = 0;
   }
 
-  activity.type = activity.shares > 0 ? 'Buy' : 'Sell';
+  activity.type = shares > 0 ? 'Buy' : 'Sell';
   activity.currency = baseCurrency;
   activity.price = +Big(activity.amount).div(activity.shares).abs();
+
   if (activity.type === 'Buy') {
     activity.fee = Math.abs(
       numberParser(content[isinIdx + foreignCurrencyIndex + 10])
     );
   } else if (activity.type === 'Sell') {
     if (transactionEndIdx - sharesIdx >= 10) {
-      activity.tax = Math.abs(
+      activity.fee = Math.abs(
         numberParser(content[isinIdx + foreignCurrencyIndex + 10])
       );
-    } else {
-      activity.tax = 0;
     }
-    activity.shares = Math.abs(activity.shares);
   }
 
   [activity.date, activity.datetime] = createActivityDateTime(
