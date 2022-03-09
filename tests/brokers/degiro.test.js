@@ -386,6 +386,44 @@ describe('Broker: DEGIRO', () => {
         fxRate: 0.9588,
       });
     });
+
+    test('Can parse document: 2022_degiro.de.json', () => {
+      const activities = degiro.parsePages(transactionLog[11]).activities;
+
+      expect(activities.length).toEqual(76);
+      expect(activities[0]).toEqual({
+        broker: 'degiro',
+        type: 'Buy',
+        date: '2022-01-27',
+        datetime: '2022-01-27T10:35:00.000Z',
+        isin: 'IE00BM67HN09',
+        company: 'XTRACKERS MSCI WORLD CONSUMER STAPLES UCITS ETF 1C',
+        shares: 25,
+        price: 41.2588,
+        amount: 1031.47,
+        fee: 2.6,
+        tax: 0,
+        currency: 'CHF',
+        foreignCurrency: 'EUR',
+        fxRate: 0.9628,
+      });
+      expect(activities[74]).toEqual({
+        broker: 'degiro',
+        type: 'Buy',
+        date: '2021-04-09',
+        datetime: '2021-04-09T07:09:00.000Z',
+        isin: 'LU0340285161',
+        company: 'UBS ETF MSCI WORLD UCITS ETF (USD) ADIS',
+        shares: 1,
+        price: 268.29,
+        amount: 268.29,
+        fee: 2.28,
+        tax: 0,
+        currency: 'CHF',
+        foreignCurrency: 'EUR',
+        fxRate: 0.9091,
+      });
+    });
   });
 
   describe('Validate Depot Overviews', () => {
@@ -450,6 +488,27 @@ describe('Broker: DEGIRO', () => {
 
       expect(result.status).toEqual(0);
       expect(result.activities.length).toEqual(1);
+      expect(result.activities[0]).toEqual({
+        broker: 'degiro',
+        type: 'TransferIn',
+        date: '2021-04-19',
+        datetime: '2021-04-19T' + result.activities[0].datetime.substr(11),
+        isin: 'IE00B4L5Y983',
+        company: 'ISHRC MSCI WLD',
+        shares: 136,
+        price: 80.79,
+        amount: 10102.98,
+        fee: 0,
+        tax: 0,
+        currency: 'CHF',
+      });
+    });
+
+    test('Can parse document: 2022_degiro.de.json', () => {
+      const result = degiro.parsePages(depotOverview[3]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities.length).toEqual(20);
       expect(result.activities[0]).toEqual({
         broker: 'degiro',
         type: 'TransferIn',

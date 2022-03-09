@@ -10,12 +10,14 @@ export const transactionLog = [
   require('./transactionLog/buy_only_transactions_it.json'),
   require('./transactionLog/0000_transactions.json'),
   require('./transactionLog/2022_degiro.ch.json'),
+  require('./transactionLog/2022_degiro.ch_amount_issue.json'),
 ];
 
 export const depotOverview = [
   require('./depotOverview/2021_depot_statement.json'),
   require('./depotOverview/2021_italian.json'),
   require('./depotOverview/2021_degiro.ch.json'),
+  require('./depotOverview/2022_degiro.de.json'),
 ];
 
 export const allSamples = transactionLog.concat(depotOverview);
