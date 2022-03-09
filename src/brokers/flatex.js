@@ -387,7 +387,8 @@ export const canParseDocument = (pages, extension) => {
       firstPageContent.some(line => line.includes('Verkauf')) ||
       firstPageContent.some(line => line.includes('Dividendengutschrift')) ||
       firstPageContent.some(line => line.includes('Ertragsmitteilung')) ||
-      detectedButIgnoredDocument(firstPageContent))
+      detectedButIgnoredDocument(firstPageContent)) &&
+    !firstPageContent.some(line => line.includes('www.degiro'))
   );
 };
 

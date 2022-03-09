@@ -232,7 +232,7 @@ const parseDepotStatement = pdfPages => {
   let isinIdx = findFirstIsinIndexInArray(flattendPages);
   while (isinIdx >= 0) {
     const shares = numberParser(flattendPages[isinIdx + 1]);
-    
+
     /** @type {Partial<Importer.Activity>} */
     const activity = {
       broker: 'degiro',

@@ -20,4 +20,6 @@ export const depotOverview = [
   require('./depotOverview/2022_degiro.de.json'),
 ];
 
-export const allSamples = transactionLog.concat(depotOverview);
+export const statements = [require('./statements/2021_degiro.ch.json')];
+
+export const allSamples = transactionLog.concat(depotOverview, statements);
