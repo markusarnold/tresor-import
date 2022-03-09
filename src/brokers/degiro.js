@@ -231,21 +231,24 @@ const parseDepotStatement = pdfPages => {
   let activities = [];
   let isinIdx = findFirstIsinIndexInArray(flattendPages);
   while (isinIdx >= 0) {
-    /** @type {Importer.Activity} */
+    const shares = numberParser(flattendPages[isinIdx + 1]);
+    
+    /** @type {Partial<Importer.Activity>} */
     const activity = {
       broker: 'degiro',
-      type: 'TransferIn',
       isin: flattendPages[isinIdx],
       company: flattendPages[isinIdx - 1],
       date,
       datetime,
-      shares: numberParser(flattendPages[isinIdx + 1]),
-      price: numberParser(flattendPages[isinIdx + 2]),
-      amount: numberParser(flattendPages[isinIdx + 4]),
+      shares: Math.abs(shares),
+      amount: Math.abs(numberParser(flattendPages[isinIdx + 4])),
       tax: 0,
       fee: 0,
       currency: currencyLineElements[2],
     };
+
+    activity.type = shares > 0 ? 'TransferIn' : 'TransferOut';
+    activity.price = +Big(activity.amount).div(activity.shares);
 
     if (validateActivity(activity)) {
       activities.push(activity);

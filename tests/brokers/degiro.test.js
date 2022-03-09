@@ -440,7 +440,7 @@ describe('Broker: DEGIRO', () => {
         isin: 'GB00B18S7B29',
         company: 'AFC ENERGY PLC   LS -,001',
         shares: 17,
-        price: 0.67,
+        price: 0.6711764705882353,
         amount: 11.41,
         fee: 0,
         tax: 0,
@@ -483,7 +483,7 @@ describe('Broker: DEGIRO', () => {
       });
     });
 
-    test('Can parse document: 2022_degiro.ch.json', () => {
+    test('Can parse document: 2021_degiro.ch.json', () => {
       const result = degiro.parsePages(depotOverview[2]);
 
       expect(result.status).toEqual(0);
@@ -496,7 +496,7 @@ describe('Broker: DEGIRO', () => {
         isin: 'IE00B4L5Y983',
         company: 'ISHRC MSCI WLD',
         shares: 136,
-        price: 80.79,
+        price: 74.28661764705882,
         amount: 10102.98,
         fee: 0,
         tax: 0,
@@ -509,19 +509,19 @@ describe('Broker: DEGIRO', () => {
 
       expect(result.status).toEqual(0);
       expect(result.activities.length).toEqual(20);
-      expect(result.activities[0]).toEqual({
+      expect(result.activities[15]).toEqual({
         broker: 'degiro',
-        type: 'TransferIn',
-        date: '2021-04-19',
-        datetime: '2021-04-19T' + result.activities[0].datetime.substr(11),
-        isin: 'IE00B4L5Y983',
-        company: 'ISHRC MSCI WLD',
-        shares: 136,
-        price: 80.79,
-        amount: 10102.98,
+        type: 'TransferOut',
+        date: '2022-01-31',
+        datetime: '2022-01-31T' + result.activities[0].datetime.substr(11),
+        isin: 'DE0007493991',
+        company: 'STROEER SE & CO KGAA',
+        shares: 15,
+        price: 66,
+        amount: 990,
         fee: 0,
         tax: 0,
-        currency: 'CHF',
+        currency: 'EUR',
       });
     });
   });
