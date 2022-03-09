@@ -77,8 +77,8 @@ describe('Broker: DEGIRO', () => {
         shares: 8,
         price: 100.90625,
         amount: 807.25,
-        fee: 0,
-        tax: 0.52,
+        fee: 0.52,
+        tax: 0,
         fxRate: 1.1226,
         foreignCurrency: 'USD',
         currency: 'EUR',
@@ -102,8 +102,8 @@ describe('Broker: DEGIRO', () => {
         shares: 47,
         price: 23.664468085106382,
         amount: 1112.23,
-        fee: 0,
-        tax: 0.66,
+        fee: 0.66,
+        tax: 0,
         fxRate: 1.2124,
         foreignCurrency: 'USD',
         currency: 'EUR',
@@ -140,8 +140,8 @@ describe('Broker: DEGIRO', () => {
         shares: 100,
         price: 11.7069,
         amount: 1170.69,
-        fee: 0,
-        tax: 0.83,
+        fee: 0.83,
+        tax: 0,
         fxRate: 1.216,
         foreignCurrency: 'USD',
         currency: 'EUR',
@@ -422,6 +422,28 @@ describe('Broker: DEGIRO', () => {
         currency: 'CHF',
         foreignCurrency: 'EUR',
         fxRate: 0.9091,
+      });
+    });
+
+    test('Can parse document: 2021_degiro.de_empty_values.json', () => {
+      const activities = degiro.parsePages(transactionLog[12]).activities;
+
+      expect(activities.length).toEqual(18);
+      expect(activities[11]).toEqual({
+        broker: 'degiro',
+        type: 'Sell',
+        date: '2021-09-15',
+        datetime: '2021-09-15T18:27:00.000Z',
+        isin: 'KYG851581069',
+        company: 'STONECO LTD-A',
+        shares: 1000,
+        price: 34.53192,
+        amount: 34531.92,
+        fee: 3.89,
+        tax: 0,
+        currency: 'EUR',
+        foreignCurrency: 'USD',
+        fxRate: 1.1818,
       });
     });
   });

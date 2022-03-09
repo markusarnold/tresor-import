@@ -11,6 +11,7 @@ export const transactionLog = [
   require('./transactionLog/0000_transactions.json'),
   require('./transactionLog/2022_degiro.ch.json'),
   require('./transactionLog/2022_degiro.ch_amount_issue.json'),
+  require('./transactionLog/2021_degiro.de_empty_values.json'),
 ];
 
 export const depotOverview = [
