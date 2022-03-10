@@ -213,7 +213,7 @@ const findExchangeRate = (content, currency) => {
 };
 
 const findTax = content => {
-  var totalTax = Big(0);
+  let totalTax = Big(0);
 
   // We should only parse the tax amounts before the information about the tax calculation.
   const lineNumberWithTaxCalculations = findLineNumberByContent(
@@ -279,6 +279,25 @@ const findTax = content => {
   return +totalTax;
 };
 
+const findFee = content => {
+  let total = Big(0);
+
+  const lineWithMinimumSurcharge = findLineNumberByContent(
+    content,
+    'Mindermengenzuschlag'
+  );
+  if (
+    lineWithMinimumSurcharge > -1 &&
+    lineWithMinimumSurcharge + 1 < content.length
+  ) {
+    total = total.plus(
+      Big(parseGermanNum(content[lineWithMinimumSurcharge + 1]))
+    );
+  }
+
+  return +total;
+};
+
 export const canParseDocument = (pages, extension) => {
   const content = pages.flat();
   return (
@@ -296,9 +315,10 @@ const parsePage = (content, documentType) => {
     isin: findISIN(content),
     shares: findShares(content, documentType),
     amount: findAmount(content, documentType),
-    fee: 0,
+    fee: findFee(content),
     tax: findTax(content),
   };
+
   let date, time;
   switch (documentType) {
     case 'Buy':
