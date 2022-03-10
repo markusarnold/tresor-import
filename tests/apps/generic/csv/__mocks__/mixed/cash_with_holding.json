@@ -1,7 +1,7 @@
 [
   {
     "time": "00:00:00",
-    "currency": "EUR",
+    "currency": "USD",
     "datetime": "2017-01-15T00:00:00.000Z",
     "type": "TransferIn",
     "amount": 2000,
@@ -14,7 +14,7 @@
   },
   {
     "time": "00:00:00",
-    "currency": "EUR",
+    "currency": "PLN",
     "datetime": "2018-01-15T00:00:00.000Z",
     "type": "TransferIn",
     "amount": 1000,
