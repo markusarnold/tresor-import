@@ -28,14 +28,11 @@ const precisionOfNumber = number => {
     return 0;
   }
 
-  let exponent = 1;
-  let precision = 0;
-  while (Math.round(number * exponent) / exponent !== number) {
-    exponent *= 10;
-    precision++;
+  if (number % 1 != 0) {
+    return number.toString().split('.')[1].length;
   }
 
-  return precision;
+  return 0;
 };
 
 const parseTransaction = (content, index, numberParser) => {
