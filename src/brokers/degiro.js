@@ -22,12 +22,6 @@ const allowedDegiroCountries = {
   'www.degiro.ch': parseSwissNumber,
 };
 
-class zeroSharesTransaction extends Error {
-  constructor(...params) {
-    super(...params);
-  }
-}
-
 // This will return the number of decimal places of the givven float
 const precisionOfNumber = number => {
   if (!isFinite(number)) {
@@ -74,12 +68,6 @@ const parseTransaction = (content, index, numberParser) => {
     tax: 0,
     fee: 0,
   };
-
-  if (activity.shares === 0) {
-    throw new zeroSharesTransaction(
-      'Transaction with ISIN ' + activity.isin + ' has no shares.'
-    );
-  }
 
   const beforeCurrencyOffset = /^[A-Z]{3}$/.test(content[sharesIdx + 1])
     ? 1
@@ -171,18 +159,9 @@ const parseTransactionLog = pdfPages => {
         continue;
       }
 
-      try {
-        const transaction = parseTransaction(
-          content,
-          transactionIndex,
-          numberParser
-        );
-        activities.push(transaction);
-      } catch (exception) {
-        if (!(exception instanceof zeroSharesTransaction)) {
-          throw exception;
-        }
-      }
+      activities.push(
+        parseTransaction(content, transactionIndex, numberParser)
+      );
 
       // Always go forward, not only in case of success, to prevent an infinity loop
       // A normal activity w/o currency rates spans 16 lines from date to date, but some have missing
