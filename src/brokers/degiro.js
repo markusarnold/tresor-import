@@ -44,17 +44,13 @@ const precisionOfNumber = number => {
   return precision;
 };
 
-const parseTransaction = (content, index, numberParser, offset) => {
+const parseTransaction = (content, index, numberParser) => {
   let foreignCurrencyIndex;
   const numberRegex = /^-{0,1}[\d.,']+((,|\.)\d+|)+$/;
 
   let isinIdx = findFirstIsinIndexInArray(content, index);
   const company = content.slice(index + 2, isinIdx).join(' ');
   const isin = content[isinIdx];
-
-  // degiro tells you now the place of execution. Sometimes it is empty so we have to move the index by 1.
-  const hasEmptyLine = content[isinIdx + 2 + offset].indexOf(',') > -1;
-  isinIdx = hasEmptyLine ? isinIdx - 1 : isinIdx;
 
   const sharesIdx = findFirstRegexIndexInArray(content, numberRegex, isinIdx);
   const transactionEndIdx = findFirstRegexIndexInArray(
@@ -85,12 +81,12 @@ const parseTransaction = (content, index, numberParser, offset) => {
     );
   }
 
-  // Some documents don't have the default columns but instead the venue column.
-  // For the currency fields we need to add an offset of 2.
-  const currencyOffset = content.some(line => line === 'Venue') ? 2 : 0;
+  const beforeCurrencyOffset = /^[A-Z]{3}$/.test(content[sharesIdx + 1])
+    ? 1
+    : 0;
 
-  const currency = content[isinIdx + 3 + offset * 2 + currencyOffset];
-  const baseCurrencyLineNumber = isinIdx + 7 + offset * 2 + currencyOffset;
+  const currency = content[sharesIdx + 2 + beforeCurrencyOffset];
+  const baseCurrencyLineNumber = sharesIdx + 6 - beforeCurrencyOffset;
   const baseCurrency = content[baseCurrencyLineNumber];
 
   if (currency !== baseCurrency) {
@@ -116,14 +112,19 @@ const parseTransaction = (content, index, numberParser, offset) => {
   activity.currency = baseCurrency;
   activity.price = +Big(activity.amount).div(activity.shares).abs();
 
+  // console.log(isin, 'content[sharesIdx + 8]', content[sharesIdx + 7])
   if (activity.type === 'Buy') {
     activity.fee = Math.abs(
-      numberParser(content[isinIdx + foreignCurrencyIndex + 10])
+      numberParser(
+        content[sharesIdx + 7 + foreignCurrencyIndex + beforeCurrencyOffset]
+      )
     );
   } else if (activity.type === 'Sell') {
     if (transactionEndIdx - sharesIdx >= 10) {
       activity.fee = Math.abs(
-        numberParser(content[isinIdx + foreignCurrencyIndex + 10])
+        numberParser(
+          content[sharesIdx + 7 + foreignCurrencyIndex + beforeCurrencyOffset]
+        )
       );
     }
   }
@@ -157,14 +158,6 @@ const parseTransactionLog = pdfPages => {
   // Get the current number parser functions based on the Degiro Country.
   let numberParser = getNumberParserFunction(pdfPages[0]);
 
-  // Sometimes a reference exchange is given which causes an offset of 1
-  let offset = 0;
-  if (
-    pdfPages.flat().includes('Ausführungso') ||
-    pdfPages.flat().includes('Borsa di')
-  ) {
-    offset += 1;
-  }
   for (let content of pdfPages) {
     let transactionIndex =
       content.findIndex(
@@ -182,8 +175,7 @@ const parseTransactionLog = pdfPages => {
         const transaction = parseTransaction(
           content,
           transactionIndex,
-          numberParser,
-          offset
+          numberParser
         );
         activities.push(transaction);
       } catch (exception) {
