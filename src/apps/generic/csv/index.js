@@ -109,6 +109,11 @@ const parseRow = (lowerCaseHeaders, row) => {
     }
   }
 
+  if (['split', 'reversesplit'].includes(activity.type)) {
+    // Any split activity from a parqet export should be ignored for the import.
+    return undefined;
+  }
+
   if (!activity.datetime && !activity.date) {
     throw new ParqetActivityValidationError(
       `Invalid activity. One of datetime, or date must be supplied.`,
