@@ -307,6 +307,31 @@ describe('Smartbroker broker test', () => {
         ],
       });
     });
+
+    test('Can parse document: 2022_GB0002875804', () => {
+      const result = smartbroker.parsePages(dividendSamples[8]);
+
+      expect(result).toEqual({
+        status: 0,
+        activities: [
+          {
+            broker: 'smartbroker',
+            type: 'Dividend',
+            date: '2022-02-09',
+            datetime: '2022-02-09' + result.activities[0].datetime.substr(10),
+            isin: 'GB0002875804',
+            company: 'British American Tobacco PLC Registered Shares LS -,25',
+            shares: 170,
+            price: 0.6365064182047921,
+            amount: 108.20609109481465,
+            fee: 0,
+            tax: 0,
+            fxRate: 0.84681,
+            foreignCurrency: 'GBP',
+          },
+        ],
+      });
+    });
   });
 
   describe('TransferIn', () => {
