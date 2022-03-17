@@ -5,7 +5,10 @@ import {
   createActivityDateTime,
 } from '@/helper';
 
-const parseBuyDocument = (/** @type {Importer.Page} */ content) => {
+const parseBuyOrSellDocument = (
+  /** @type {Importer.Page} */ content,
+  /** @type {Importer.ActivityTypeUnion} */ type
+) => {
   content = content.slice(content.indexOf('ISIN'));
 
   const shares = findShares(content);
@@ -14,7 +17,7 @@ const parseBuyDocument = (/** @type {Importer.Page} */ content) => {
   /** @type {Partial<Importer.Activity>} */
   let activity = {
     broker: 'sBroker',
-    type: 'Buy',
+    type,
     isin: findIsin(content),
     wkn: findWkn(content),
     company: findCompany(content),
@@ -172,6 +175,10 @@ const getDocumentType = (/** @type {Importer.Page} */ content) => {
     return 'Buy';
   }
 
+  if (isSell(content)) {
+    return 'Sell';
+  }
+
   if (isDividend(content)) {
     return 'Dividend';
   }
@@ -186,6 +193,17 @@ const isBuy = (/** @type {Importer.Page} */ content) => {
     content[lineNumber + 1] === 'Abrechnung' &&
     (content[lineNumber + 2] === 'Kauf' ||
       content[lineNumber + 2] === 'Ausgabe')
+  );
+};
+
+const isSell = (/** @type {Importer.Page} */ content) => {
+  const lineNumber = content.indexOf('Wertpapier');
+
+  return (
+    lineNumber > 0 &&
+    lineNumber + 2 < content.length &&
+    content[lineNumber + 1] === 'Abrechnung' &&
+    content[lineNumber + 2] === 'Verkauf'
   );
 };
 
@@ -222,9 +240,11 @@ export const parsePages = (/** @type {Importer.Page[]} */ pages) => {
   const flatContent = pages.flat();
   let activities = [];
 
-  switch (getDocumentType(pages[0])) {
+  const type = getDocumentType(pages[0]);
+  switch (type) {
     case 'Buy':
-      activities.push(parseBuyDocument(flatContent));
+    case 'Sell':
+      activities.push(parseBuyOrSellDocument(flatContent, type));
       break;
 
     case 'Dividend':
