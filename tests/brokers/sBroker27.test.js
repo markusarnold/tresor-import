@@ -1,5 +1,10 @@
 import * as sbroker from '../../src/brokers/sbroker27';
-import { allSamples, buySamples, dividendSamples } from './__mocks__/sbroker27';
+import {
+  allSamples,
+  buySamples,
+  sellSamples,
+  dividendSamples,
+} from './__mocks__/sbroker27';
 import { validateAllSamples } from '../setup/brokers';
 
 describe('Broker: sBroker27', () => {
@@ -89,6 +94,30 @@ describe('Broker: sBroker27', () => {
           price: 31.37550200803213,
           amount: 50,
           fee: 0,
+          tax: 0,
+        },
+      ]);
+    });
+  });
+
+  describe('Sell', () => {
+    test('Can parse document: 2022_IE00B652H904', () => {
+      const result = sbroker.parsePages(sellSamples[0]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities).toEqual([
+        {
+          broker: 'sBroker',
+          type: 'Sell',
+          date: '2022-03-01',
+          datetime: '2022-03-01T' + result.activities[0].datetime.substring(11),
+          isin: 'IE00B652H904',
+          wkn: 'A1JNZ9',
+          company: 'ISHSV-EM DIVIDEND UCITS ETF REGISTERED SHARES USD O.N.',
+          shares: 56,
+          price: 17.243214285714284,
+          amount: 965.62,
+          fee: 9.97,
           tax: 0,
         },
       ]);

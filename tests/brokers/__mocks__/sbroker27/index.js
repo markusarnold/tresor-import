@@ -5,6 +5,8 @@ export const buySamples = [
   require('./buy/2022_LU0292096186.json'),
 ];
 
+export const sellSamples = [require('./sell/2022_IE00B652H904.json')];
+
 export const dividendSamples = [
   require('./dividend/2021_US88579Y1010.json'),
   require('./dividend/2021_NO0003054108.json'),
@@ -13,4 +15,4 @@ export const dividendSamples = [
   require('./dividend/2021_DE000ETFL508.json'),
 ];
 
-export const allSamples = buySamples.concat(dividendSamples);
+export const allSamples = buySamples.concat(sellSamples, dividendSamples);
