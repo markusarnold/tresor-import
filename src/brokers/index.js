@@ -1,5 +1,6 @@
 import * as _1822direkt from './1822direkt';
 import * as baaderBank from './baaderBank';
+import * as bondora from './bondora';
 import * as comdirect from './comdirect';
 import * as commerzbank from './commerzbank';
 import * as consorsbank from './consorsbank';
@@ -26,6 +27,7 @@ import * as quirion from './quirion';
 export {
   _1822direkt,
   baaderBank,
+  bondora,
   comdirect,
   commerzbank,
   consorsbank,
