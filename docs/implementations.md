@@ -5,6 +5,7 @@ a more detailed explanation is given behind brokername.
 | ------------------------------------------------------ | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | 1822direkt                                             | Buy, Sell, Dividend                                                  |                                                                                    |
 | Baader Bank                                            | Buy, Sell, Dividend                                                  |                                                                                    |
+| Bondora Gow & Grow Statements                          | Buy, Interests                                                       |                                                                                    |
 | comdirect                                              | Buy, Sell, Dividend                                                  |                                                                                    |
 | Commerzbank                                            | Buy, Dividend, Transaction Log                                       |                                                                                    |
 | Consorsbank                                            | Buy, Sell, Dividend                                                  |                                                                                    |
