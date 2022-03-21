@@ -4,6 +4,7 @@ export enum ActivityType {
   DIVIDEND = 'Dividend',
   TRANSFER_IN = 'TransferIn',
   TRANSFER_OUT = 'TransferOut',
+  INTEREST = 'Interest',
   PAYBACK = 'Payback',
   TAX_DIVIDEND = 'TaxDividend',
 }
@@ -14,6 +15,7 @@ export type ActivityTypeUnion =
   | 'Dividend'
   | 'TransferIn'
   | 'TransferOut'
+  | 'Interest'
   | 'Payback'
   | 'TaxDividend';
 

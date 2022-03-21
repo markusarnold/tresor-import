@@ -251,7 +251,14 @@ export function validateActivity(activity, findSecurityAlsoByCompany = false) {
 
   // Object.keys(ActivityType).map((t) => ActivityType[t]) <-- would use this for list, but it includes more types
   // than the list below
-  const at = ['Buy', 'Sell', 'Dividend', 'TransferIn', 'TransferOut'];
+  const at = [
+    'Buy',
+    'Sell',
+    'Dividend',
+    'TransferIn',
+    'TransferOut',
+    'Interest',
+  ];
   if (!at.includes(activity.type)) {
     throw new ParqetActivityValidationError(
       `Invalid 'type'. Activity 'type' field value must be one of [${at.join(
