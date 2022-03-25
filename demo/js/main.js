@@ -17,7 +17,7 @@ new Vue({
   },
   computed: {
     // a computed getter
-    remappedActivities () {
+    remappedActivities() {
       /* Parquet Activity format
       {
         "broker": "comdirect",
@@ -36,8 +36,6 @@ new Vue({
       };
       */
       return this.activities.map(act => {
-        const money = new Intl.NumberFormat('de-DE',
-          { style: 'currency', currency: 'EUR' });
         const numbr = Intl.NumberFormat('de-DE');
         return {
           Date: act.date,
@@ -50,36 +48,40 @@ new Vue({
           AVG_Filter: null,
           ISIN: act.isin,
           TransactionType: this.getTransactionTypeNum(act.type),
-          Quantity: numbr.format((act.shares)),
+          Quantity: numbr.format(act.shares),
           Price: numbr.format(act.price),
           rawAmount: numbr.format(
-            (act.type === 'Buy') ? -act.amount : act.amount
+            act.type === 'Buy' ? -act.amount : act.amount
           ),
           fee: numbr.format(
-            (act.type === 'Buy') ? -Number(act.fee) : Number(act.fee)
+            act.type === 'Buy' ? -Number(act.fee) : Number(act.fee)
           ),
           PayedOrReceived: numbr.format(
-            (act.type === 'Buy') ? -act.amount - act.fee : act.amount + act.fee
-          )
-        }
+            act.type === 'Buy' ? -act.amount - act.fee : act.amount + act.fee
+          ),
+        };
       });
-    }
+    },
   },
   methods: {
     showHoldingWarning(a) {
       return !a.filename && !a.holding;
     },
-    activitiesToMyExcel () {
+    activitiesToMyExcel() {
       const items = this.remappedActivities;
-      const replacer = (key, value) => value === null ? '' : value // specify how you want to handle null values here
-      const header = Object.keys(items[0])
+      const replacer = (key, value) => (value === null ? '' : value); // specify how you want to handle null values here
+      const header = Object.keys(items[0]);
       const csv = [
         header.join('\t'), // header row first
-        ...items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join('\t'))
-      ].join('\r\n')
+        ...items.map(row =>
+          header
+            .map(fieldName => JSON.stringify(row[fieldName], replacer))
+            .join('\t')
+        ),
+      ].join('\r\n');
       return csv;
     },
-    getTransactionTypeNum (type) {
+    getTransactionTypeNum(type) {
       if (type === 'Dividend') {
         return 0;
       } else if (type === 'Buy') {
@@ -90,8 +92,8 @@ new Vue({
         return 999;
       }
     },
-    getRawAmount (act) {
-      return (act.type === 'Buy') ? -act.amount : act.amount;
+    getRawAmount(act) {
+      return act.type === 'Buy' ? -act.amount : act.amount;
     },
     getPriceColor(type) {
       if (type === 'Dividend' || type === 'Buy' || type === 'Import') {
@@ -204,37 +206,35 @@ new Vue({
 
           this.handleParserResults(result);
           */
-         // copied and adapted from loadJson:
+          // copied and adapted from loadJson:
 
-         let activities = [];
-         let status = 0;
-   
-         try {
-           activities = parseActivitiesFromPages(
-             parsedFile.pages,
-             file.name,
-             parsedFile.extension
-           );
-         } catch (e) {
-           console.error(e);
-           if (e.data && e.data.status) {
-             status = e.data.status;
-           } else {
-             status = 3; // unexpected error parsing (e.g. JSON.parse didn't work)
-           }
-         }
-   
-         this.clearResults();
-   
-         this.handleParserResults({
-           file: file.name,
-           content: parsedFile.pages,
-           activities,
-           status,
-           successful: activities !== undefined && status === 0,
-         });
-   
+          let activities = [];
+          let status = 0;
 
+          try {
+            activities = parseActivitiesFromPages(
+              parsedFile.pages,
+              file.name,
+              parsedFile.extension
+            );
+          } catch (e) {
+            console.error(e);
+            if (e.data && e.data.status) {
+              status = e.data.status;
+            } else {
+              status = 3; // unexpected error parsing (e.g. JSON.parse didn't work)
+            }
+          }
+
+          this.clearResults();
+
+          this.handleParserResults({
+            file: file.name,
+            content: parsedFile.pages,
+            activities,
+            status,
+            successful: activities !== undefined && status === 0,
+          });
         });
       });
     },

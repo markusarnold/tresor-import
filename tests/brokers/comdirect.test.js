@@ -261,10 +261,10 @@ describe('Broker: comdirect', () => {
         tax: 0,
       });
     });
-    
+
     test('Can parse buy Aktienanleihe: 2020_infineon_anleihe', () => {
       const result = comdirect.parsePages(buySamples[12]).activities;
-  
+
       expect(result.length).toEqual(1);
       expect(result[0]).toEqual({
         broker: 'comdirect',
