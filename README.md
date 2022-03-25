@@ -6,7 +6,7 @@ Use of this library is granted for private, non-commercial, open-source products
 **For a commercial license for closed-source projects, contact [sumit@parqet.com](mailto:sumit@parqet.com)**
 
 ## Supported Brokers
-
+ 
 All brokers supported by tresor-import are listed in the [documentation](docs/implementations.md).
 
 ## Installation

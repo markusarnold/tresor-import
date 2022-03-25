@@ -116,26 +116,47 @@
                   <small class="is-size-7">Fee: {{ formatPrice(activity.fee) }}€</small>
                 </p>
 
-                <div class="level is-mobile">
-                  <div class="level-left">
-                    <div class="level-item">
-                      <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;"
-                        :title="activity.filename">
-                        <small v-if="activity.filename" class="is-size-7">{{ activity.filename }}</small>
-                      </p>
-                    </div>
+              <div class="level is-mobile">
+                <div class="level-left">
+                  <div class="level-item">
+                    <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;"
+                      :title="activity.filename">
+                      <small v-if="activity.filename" class="is-size-7">{{ activity.filename }}</small>
+                    </p>
                   </div>
-                  <div class="level-right">
-                    <div class="level-item">
-                      <p>
-                        <small class="is-size-7 has-text-grey">{{ formatDate(activity.date) }}</small>
-                      </p>
-                    </div>
+                </div>
+                <div class="level-right">
+                  <div class="level-item">
+                    <p>
+                      <small class="is-size-7 has-text-grey">{{ formatDate(activity.date) }}</small>
+                    </p>
                   </div>
                 </div>
               </div>
-            </li>
-          </ul>
+            </div>
+          </li>
+        </ul>
+        <br>
+        <div v-if="activities">
+          <h1>Activities scanned by Parquet:</h1>
+          <textarea rows="10" cols="120">
+            {{activities}}
+          </textarea>
+        </div>
+        <br>
+        <div v-if="activities">
+          <h1>Remapped Activities:</h1>
+          <textarea rows="10" cols="120">
+            {{remappedActivities}}
+          </textarea>
+        </div>
+        <br>
+        <div v-if="activities.length > 0">
+          <h1>Activities tabularized for Excel:</h1>
+          <textarea rows="10" cols="120">
+            {{activitiesToMyExcel()}}
+            </textarea>
+        </div>
         </p>
       </div>
     </section>

@@ -102,20 +102,20 @@ const findShares = (textArr, formatId) => {
     }
   }
 
-  // Otherwise just search for the first occurance of 'St.'
+  // Otherwise just search for the first occurance of 'St.' or 'EUR'
   const sharesLine =
     textArr[textArr.findIndex(t => t.includes('Nennwert')) + 1];
   let shares = 0;
-  let hasPiece = false;
+  let hasPieceOrEUR = false;
   sharesLine.split(/\s+/).forEach(element => {
     if (shares > 0) {
       return;
     }
-    if (element.includes('St.')) {
-      hasPiece = true;
+    if (element.includes('St.') || element.includes('EUR')) {
+      hasPieceOrEUR = true;
       return;
     }
-    if (!hasPiece || element.length === 0) {
+    if (!hasPieceOrEUR || element.length === 0) {
       return;
     }
     shares = parseGermanNum(element);

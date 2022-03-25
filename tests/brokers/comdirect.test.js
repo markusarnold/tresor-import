@@ -261,6 +261,26 @@ describe('Broker: comdirect', () => {
         tax: 0,
       });
     });
+    
+    test('Can parse buy Aktienanleihe: 2020_infineon_anleihe', () => {
+      const result = comdirect.parsePages(buySamples[12]).activities;
+  
+      expect(result.length).toEqual(1);
+      expect(result[0]).toEqual({
+        broker: 'comdirect',
+        type: 'Buy',
+        date: '2019-12-20',
+        datetime: '2019-12-20T' + result[0].datetime.substring(11),
+        isin: 'DE000TT97HB4',
+        wkn: 'TT97HB',
+        company: '6,10000% HSBC Trinkaus & Burkhardt AG',
+        shares: 2000,
+        price: 1,
+        amount: 2000,
+        fee: 0,
+        tax: 0,
+      });
+    });
   });
 
   describe('Validate Sells', () => {

@@ -11,6 +11,7 @@ export const buySamples = [
   require('./buy/2003_jenoptik.json'),
   require('./buy/2021_tui_rewrite.json'),
   require('./buy/2003_dws_vermoegen.json'),
+  require('./buy/2020_infineon_anleihe.json'),
 ];
 
 export const sellSamples = [
