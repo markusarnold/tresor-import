@@ -44,7 +44,7 @@ export interface Activity {
   tax: number = 0;
   foreignCurrency?: string;
   fxRate?: number;
-  note?:string
+  note?: string;
 }
 
 export interface Implementation {

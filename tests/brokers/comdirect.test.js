@@ -2,7 +2,12 @@ import Big from 'big.js';
 import * as comdirect from '../../src/brokers/comdirect';
 import { validateAllSamples } from '../setup/brokers';
 import {
-  allSamples, buySamples, dividendSamples, ignoredSamples, sellSamples, taxInfoDividendSamples
+  allSamples,
+  buySamples,
+  dividendSamples,
+  ignoredSamples,
+  sellSamples,
+  taxInfoDividendSamples,
 } from './__mocks__/comdirect';
 
 describe('Broker: comdirect', () => {
@@ -286,48 +291,47 @@ describe('Broker: comdirect', () => {
         amount: 2000,
         fee: 0,
         tax: 0,
-        note: ''
-    });   
-  });
-
-  test('Can parse Einloesung in Aktien: 2022_Adidas.Aktien.Einloesung.Aktienanleihe', () => {
-    const result = comdirect.parsePages(buySamples[13]).activities;
-
-    expect(result.length).toEqual(2);
-    expect(result[0]).toEqual({
-      broker: 'comdirect',
-      type: 'Buy',
-      date: '2020-12-28',
-      datetime: '2020-12-28T' + result[0].datetime.substring(11),
-      isin: 'DE000A1EWWW0',
-      wkn: 'A1EWWW',
-      company: 'adidas AG Namens-Aktien o.N.',
-      shares: 3,
-      price: 333.3333333333333,
-      amount: 1000,
-      fee: 0,
-      tax: 0,
-      note: 'Einlösung in Aktien:(Vontobel Financial Products Protect Aktienanl.v.20(20)ADS, DE000VE5CGK9) -> (adidas AG Namens-Aktien o.N., DE000A1EWWW0)'
+        note: '',
+      });
     });
-    
-    expect(result[1]).toEqual({
-      broker: 'comdirect',
-      type: 'Sell',
-      date: '2020-12-28',
-      datetime: '2020-12-28T' + result[0].datetime.substring(11),
-      isin: 'DE000VE5CGK9',
-      wkn: 'VE5CGK',
-      company: 'Vontobel Financial Products Protect Aktienanl.v.20(20)ADS',
-      shares: 1,
-      price: 1000,
-      amount: 1000,
-      fee: 0,
-      tax: 0,
-      note: 'Pseudorückzahlung zur Ausbuchung der Anleihe'
+
+    test('Can parse Einloesung in Aktien: 2022_Adidas.Aktien.Einloesung.Aktienanleihe', () => {
+      const result = comdirect.parsePages(buySamples[13]).activities;
+
+      expect(result.length).toEqual(2);
+      expect(result[0]).toEqual({
+        broker: 'comdirect',
+        type: 'Buy',
+        date: '2020-12-28',
+        datetime: '2020-12-28T' + result[0].datetime.substring(11),
+        isin: 'DE000A1EWWW0',
+        wkn: 'A1EWWW',
+        company: 'adidas AG Namens-Aktien o.N.',
+        shares: 3,
+        price: 333.3333333333333,
+        amount: 1000,
+        fee: 0,
+        tax: 0,
+        note: 'Einlösung in Aktien:(Vontobel Financial Products Protect Aktienanl.v.20(20)ADS, DE000VE5CGK9) -> (adidas AG Namens-Aktien o.N., DE000A1EWWW0)',
+      });
+
+      expect(result[1]).toEqual({
+        broker: 'comdirect',
+        type: 'Sell',
+        date: '2020-12-28',
+        datetime: '2020-12-28T' + result[0].datetime.substring(11),
+        isin: 'DE000VE5CGK9',
+        wkn: 'VE5CGK',
+        company: 'Vontobel Financial Products Protect Aktienanl.v.20(20)ADS',
+        shares: 1,
+        price: 1000,
+        amount: 1000,
+        fee: 0,
+        tax: 0,
+        note: 'Pseudorückzahlung zur Ausbuchung der Anleihe',
+      });
     });
   });
-
-});
 
   describe('Validate Sells', () => {
     test('Can parse the sell order: 2020_eur_stock_biontech', () => {
@@ -436,7 +440,7 @@ describe('Broker: comdirect', () => {
         note: '',
       });
     });
-    
+
     test('Can parse Einloesung in bar: 2022_Amazon.bar.Einloesung.Aktienanleihe', () => {
       const result = comdirect.parsePages(sellSamples[5]).activities;
 
@@ -454,10 +458,9 @@ describe('Broker: comdirect', () => {
         amount: 2000,
         fee: 0,
         tax: 0,
-        note: 'Einlösung in bar'
+        note: 'Einlösung in bar',
       });
     });
-
   });
 
   describe('Validate dividends', () => {
@@ -534,7 +537,7 @@ describe('Broker: comdirect', () => {
       expect(activities.length).toEqual(1);
       expect(activities[0]).toEqual({
         broker: 'comdirect',
-        type: 'Dividend',  
+        type: 'Dividend',
         date: '2021-12-24',
         datetime: '2021-12-24T' + activities[0].datetime.substring(11),
         isin: 'DE000VQ122W2',

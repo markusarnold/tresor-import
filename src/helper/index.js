@@ -109,10 +109,12 @@ export function findPreviousRegexMatchIdx(arr, idx, regex) {
 function validateCommons(activity) {
   // All fields must have a value unequal undefined
   //if (!Object.values(activity).every(a => !!a || a === 0)) {
-  if (!Object.keys(activity)
+  if (
+    !Object.keys(activity)
       .filter(key => !key.includes('note'))
       .map(key => activity[key])
-      .every(a => !!a || a === 0)) {
+      .every(a => !!a || a === 0)
+  ) {
     throw new ParqetActivityValidationError(
       'Invalid fields. Activity must not contain fields with undefined, or empty values.',
       activity,
@@ -176,7 +178,7 @@ function validateCommons(activity) {
   }
 
   // because Zinsgutschrift does not have shares !
-  //if (Number(activity.shares) !== activity.shares || activity.shares <= 0) {  
+  //if (Number(activity.shares) !== activity.shares || activity.shares <= 0) {
   if (Number(activity.shares) !== activity.shares || activity.shares < 0) {
     throw new ParqetActivityValidationError(
       //`Invalid 'shares'. Activity 'shares' field must be of type 'number' and greater than 0.`,

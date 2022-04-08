@@ -220,7 +220,7 @@ new Vue({
             );
           } catch (e) {
             console.error(e);
-            console.log("file content:"+file);
+            console.log('file content:' + file);
             if (e.data && e.data.status) {
               status = e.data.status;
             } else {
