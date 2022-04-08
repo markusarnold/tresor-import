@@ -1,11 +1,8 @@
+import {
+  createActivityDateTime, parseGermanNum, timeRegex, validateActivity
+} from '@/helper';
 import Big from 'big.js';
 import { onvistaIdentificationString } from './onvista';
-import {
-  parseGermanNum,
-  validateActivity,
-  createActivityDateTime,
-  timeRegex,
-} from '@/helper';
 
 const findISINAndWKN = (pdfPage, spanISIN = 0, spanWKN = 0) => {
   // The line contains either WPKNR/ISIN or WKN/ISIN, depending on the document
@@ -26,6 +23,29 @@ const findISINAndWKN = (pdfPage, spanISIN = 0, spanWKN = 0) => {
   return [isinLine[isinLine.length - 1], wknLine[wknLine.length - 1]];
 };
 
+const findISINAndWKNAndCompanyforAktieOfAnleihe = (textArr) => {
+
+  const wknLineIndex = textArr.findIndex(t => t.includes('Nach Wahl des Emittenten erfolgt')) + 1;
+  const wknLine   = textArr[wknLineIndex].split(/\s+/);
+  const wkn = wknLine[wknLine.length - 1];
+
+  const isinLine  = textArr[wknLineIndex+1].split(/\s+/);
+  const isin = isinLine[isinLine.length - 1];
+
+  wknLine.shift(); wknLine.shift();     // drop first two
+  isinLine.pop(); isinLine.pop();       // drop last two
+  wknLine.pop();  wknLine.pop();        // drop last two
+  const compName  = wknLine.concat(isinLine).join(' ');
+  return [isin, wkn, compName];
+};
+
+const findPriceOfAnleihe = (textArr) => {
+
+  const priceLineIndex = textArr.findIndex(t => t.includes('Umtauschverhältnis STK'));
+  const priceLine   = textArr[priceLineIndex].split(/\s+/);
+  return Big(parseGermanNum(priceLine[priceLine.length - 1]))
+};
+
 const findCompany = (text, type, formatId) => {
   const companyLineIndex = text.findIndex(t => t.includes('/ISIN'));
   // span = 2 means its a dividend PDF - dividends dont have the WKN in the same line
@@ -34,6 +54,10 @@ const findCompany = (text, type, formatId) => {
       return text[companyLineIndex + 1].split(/\s+/).slice(0, -1).join(' ');
     }
     case 'Sell': {
+      if(isAktienanleiheMitEinloesungBar(text) || (isAktienanleiheMitEinloesungInAktien(text)))  {
+        // in this case the company name spreads also over the next but one line
+        return text[companyLineIndex + 2].trim() + ' ' + text[companyLineIndex + 4].trim();
+      }
       const lineContent = text[companyLineIndex + 1].trim();
       if (formatId === 0) {
         // In this format, the name is one the same line as the WKN. We need only the first element before multiple spaces. Example:
@@ -43,13 +67,21 @@ const findCompany = (text, type, formatId) => {
       return lineContent;
     }
     case 'Dividend': {
-      return text[companyLineIndex + 2].trim();
+      if (isZinsGutschrift(text)) { // in this case the company name spreads also over the next but one line
+        return text[companyLineIndex + 2].trim() + ' ' + text[companyLineIndex + 4].trim();
+      } else {
+        return text[companyLineIndex + 2].trim();
+      }
     }
   }
 };
 
 const findDateBuySell = textArr => {
-  const dateLine = textArr[textArr.findIndex(t => t.includes('Geschäftstag'))];
+  //const dateLine = textArr[textArr.findIndex(t => t.includes('Geschäftstag'))];
+  const dateLabel = isAktienanleiheMitEinloesungBar(textArr) || isAktienanleiheMitEinloesungInAktien(textArr)
+    ?'fällig per'
+    : 'Geschäftstag';
+  const dateLine = textArr[textArr.findIndex(t => t.includes(dateLabel))];
   return dateLine.match(/[0-9]{2}.[0-9]{2}.[1-2][0-9]{3}/)[0];
 };
 
@@ -103,15 +135,16 @@ const findShares = (textArr, formatId) => {
   }
 
   // Otherwise just search for the first occurance of 'St.' or 'EUR'
-  const sharesLine =
-    textArr[textArr.findIndex(t => t.includes('Nennwert')) + 1];
+  const sharesLine = isAktienanleiheMitEinloesungInAktien(textArr)
+    ? textArr[textArr.findIndex(t => t.includes('Nach Wahl des Emittenten erfolgt')) + 1]
+    : textArr[textArr.findIndex(t => t.includes('Nennwert')) + 1];
   let shares = 0;
   let hasPieceOrEUR = false;
   sharesLine.split(/\s+/).forEach(element => {
     if (shares > 0) {
       return;
     }
-    if (element.includes('St.') || element.includes('EUR')) {
+    if (element.includes('STK') || element.includes('St.') || element.includes('EUR')) {
       hasPieceOrEUR = true;
       return;
     }
@@ -131,6 +164,11 @@ const findDividendShares = textArr => {
 };
 
 const findAmount = (textArr, fxRate, foreignCurrency, formatId) => {
+  if (isAktienanleiheMitEinloesungInAktien(textArr)) { 
+    const amountIndex = textArr.findIndex(t => t.includes('Depotbestand')) + 3;
+    const amountLine = textArr[amountIndex].split(/\s+/);
+    return Big(parseGermanNum(amountLine[1]));
+  }
   let isInForeignCurrency = false;
   let amount;
   // Sometimes orders are split across multiple sells. This needs to be
@@ -345,24 +383,29 @@ const getDocumentFormatId = content => {
     return 1;
   } else if (
     content.some(line => line.startsWith('Steuerliche Behandlung: '))
-  ) {
-    // This is the case for tax information files
-    return 2;
-  }
-  console.error('Unknown Document Type, can not parse');
-};
-
-const getDocumentType = content => {
+    ) {
+      // This is the case for tax information files
+      return 2;
+    }
+    console.error('Unknown Document Type, can not parse');
+  };
+  
+  const getDocumentType = content => {
   if (
     content.includes('Wertpapierkauf') ||
-    content.includes('Wertpapierbezug')
+    content.includes('Wertpapierbezug') ||
+    isAktienanleiheMitEinloesungInAktien(content) 
   ) {
     return 'Buy';
-  } else if (content.includes('Wertpapierverkauf')) {
+  } else if (
+    content.includes('Wertpapierverkauf') ||
+    isAktienanleiheMitEinloesungBar(content) 
+  ) {
     return 'Sell';
   } else if (
     content.includes('Ertragsgutschrift') ||
-    content.includes('Dividendengutschrift')
+    content.includes('Dividendengutschrift')||
+    content.includes('Zinsgutschrift') 
   ) {
     return 'Dividend';
   } else if (
@@ -400,6 +443,7 @@ const parseData = (textArr, type) => {
     type,
     fee: 0,
     tax: 0,
+    note: '',
   };
 
   let date, time, fxRate, foreignCurrency;
@@ -420,18 +464,25 @@ const parseData = (textArr, type) => {
       break;
     }
     case 'Sell': {
-      [activity.isin, activity.wkn] = findISINAndWKN(
-        textArr,
-        formatId === 1 ? 4 : 2,
-        formatId === 1 ? 2 : 1
-      );
+      if (isAktienanleiheMitEinloesungBar(textArr)) {
+        activity.note = 'Einlösung in bar';
+        [activity.isin, activity.wkn] = findISINAndWKN(textArr, 3, 1);
+      } else {
+        [activity.isin, activity.wkn] = findISINAndWKN(
+          textArr,
+          formatId === 1 ? 4 : 2,
+          formatId === 1 ? 2 : 1
+        );
+      }
       activity.company = findCompany(textArr, activity.type, formatId);
-      date = findDateBuySell(textArr);
+      date = findDateBuySell(textArr);  
       time = findOrderTime(textArr);
       [fxRate, foreignCurrency] = findBuyFxRateForeignCurrency(textArr);
       activity.shares = findShares(textArr, formatId);
       activity.amount = +findAmount(textArr, fxRate, foreignCurrency, formatId);
-      activity.price = +Big(activity.amount).div(activity.shares);
+      activity.price = isAktienanleiheMitEinloesungBar(textArr) 
+        ?0
+        :+Big(activity.amount).div(activity.shares);
       activity.fee = findFee(textArr, activity.amount, true, formatId);
       activity.tax = findTax(textArr, fxRate, formatId)[0];
       break;
@@ -441,10 +492,16 @@ const parseData = (textArr, type) => {
       [activity.isin, activity.wkn] = findISINAndWKN(textArr, 3, 1);
       activity.company = findCompany(textArr, type, formatId);
       date = findDateDividend(textArr);
-      activity.shares = findDividendShares(textArr);
+      activity.shares = !isZinsGutschrift(textArr)
+        ?findDividendShares(textArr)
+        :0;
       activity.amount = findPayout(textArr, fxRate)[0];
-      activity.price = +Big(activity.amount).div(activity.shares);
-      activity.tax = findTax(textArr, fxRate, formatId)[0];
+      activity.price = !isZinsGutschrift(textArr)
+        ?+Big(activity.amount).div(activity.shares)
+        :0;
+      activity.tax = !isZinsGutschrift(textArr)
+        ?findTax(textArr, fxRate, formatId)[0]
+        :0;
       break;
     }
     case 'TaxDividend': {
@@ -470,7 +527,48 @@ const parseData = (textArr, type) => {
     activity.fxRate = fxRate;
     activity.foreignCurrency = foreignCurrency;
   }
-  return validateActivity(activity);
+  return [validateActivity(activity)];
+};
+
+const parseDataAktienanleiheMitEinloesungInAktien = (textArr) => {
+  let date, time, fxRate, foreignCurrency;
+  const formatId = getDocumentFormatId(textArr);
+  date = findDateBuySell(textArr);
+  time = findOrderTime(textArr);
+  
+  /** @type {Partial<Importer.Activity>} */
+  let activitySell = {   // Pseudorückzahlung zur Ausbuchung der Anleihe
+    broker: 'comdirect',
+    type: 'Sell',
+    fee: 0,
+    tax: 0,
+    note: 'Pseudorückzahlung zur Ausbuchung der Anleihe',
+  };
+  [activitySell.isin, activitySell.wkn, activitySell.company] = findISINAndWKN(textArr, 3, 1)
+    .concat(findCompany(textArr, activitySell.type, formatId));
+  [activitySell.date, activitySell.datetime] = createActivityDateTime(date, time);
+  activitySell.price = +findPriceOfAnleihe(textArr);
+  activitySell.amount = +findAmount(textArr, fxRate, foreignCurrency, formatId);
+  activitySell.shares  = +Big(activitySell.amount).div(activitySell.price); 
+   
+  /** @type {Partial<Importer.Activity>} */
+  let activityBuy = {   // Zwangskauf, da Anleihe in Aktien zurückbezahlt wird !
+    broker: 'comdirect',
+    type: 'Buy',
+    fee: 0,
+    tax: 0,
+    note: 'Einlösung in Aktien:...', // see below
+  };
+  [fxRate, foreignCurrency] = findBuyFxRateForeignCurrency(textArr);
+  [activityBuy.isin, activityBuy.wkn, activityBuy.company]   = findISINAndWKNAndCompanyforAktieOfAnleihe(textArr);
+  activityBuy.note = `Einlösung in Aktien:(${activitySell.company}, ${activitySell.isin}) -> (${activityBuy.company}, ${activityBuy.isin})`;
+  activityBuy.amount = +findAmount(textArr, fxRate, foreignCurrency, formatId);
+  activityBuy.shares = findShares(textArr, formatId);
+  activityBuy.price = +Big(activityBuy.amount).div(activityBuy.shares);
+  activityBuy.fee = findFee(textArr, activityBuy.amount, false, formatId);
+  [activityBuy.date, activityBuy.datetime] = createActivityDateTime(date, time);
+  
+  return [validateActivity(activityBuy), validateActivity(activitySell)];
 };
 
 export const parsePages = contents => {
@@ -486,7 +584,12 @@ export const parsePages = contents => {
 
   // Sometimes information regarding the first transcation (i. e. tax in sell
   // documents) is spread across multiple pdf pages
-  const activities = [parseData(contents.flat(), type)];
+  
+  //const activities = [parseData(contents.flat(), type)];
+  const contentsFlat = contents.flat();
+  const activities = isAktienanleiheMitEinloesungInAktien(contentsFlat)
+    ?parseDataAktienanleiheMitEinloesungInAktien(contentsFlat)
+    :parseData(contentsFlat, type);
 
   return {
     activities,
@@ -495,3 +598,18 @@ export const parsePages = contents => {
 };
 
 export const parsingIsTextBased = () => true;
+
+function isAktienanleiheMitEinloesungBar (content) {
+  // Aktienanleihe wird bar zurückgezahlt
+  return content.some(line => line.startsWith('Einlösung zum Kurs'));
+}
+
+function isAktienanleiheMitEinloesungInAktien (content) {
+  // Aktienanleihe wird in Aktien zurückgezahlt
+  return content.some(line => line.startsWith('Tilgung in Stücken'));
+}
+
+function isZinsGutschrift (text) {
+  return text.includes('Zinsgutschrift');
+}
+

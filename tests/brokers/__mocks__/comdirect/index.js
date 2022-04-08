@@ -12,6 +12,7 @@ export const buySamples = [
   require('./buy/2021_tui_rewrite.json'),
   require('./buy/2003_dws_vermoegen.json'),
   require('./buy/2020_infineon_anleihe.json'),
+  require('./buy/2022_Adidas.Aktien.Einloesung.Aktienanleihe.json'),
 ];
 
 export const sellSamples = [
@@ -20,12 +21,14 @@ export const sellSamples = [
   require('./sell/2020_eur_stock_wirecard.json'),
   require('./sell/2020_eur_sauren_global_balanced.json'),
   require('./sell/2020_eur_sma_solar_technology.json'),
+  require('./sell/2022_Amazon.bar.Einloesung.Aktienanleihe'),
 ];
 
 export const dividendSamples = [
   require('./dividend/currency_usd.json'),
   require('./dividend/currency_eur.json'),
   require('./dividend/dividend_usd_stryker_corp.json'),
+  require('./dividend/2020_infineon_anleihe_zins.json'),
 ];
 
 export const taxInfoDividendSamples = [

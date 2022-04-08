@@ -3,6 +3,7 @@ import { de } from 'date-fns/locale';
 import parse from 'date-fns/parse';
 // Use the webpack version to ensure, that the published version works fine and not only the src/ one.
 import { parseActivitiesFromPages, parseFile } from '../bundle/tresor-import';
+//import { parseActivitiesFromPages, parseFile } from '../../src/index.js';
 // To use the published version, uncomment the following line after running: npm run build
 // import { parseFile, parseActivitiesFromPages } from '../../dist/tresor-import';
 
@@ -40,7 +41,7 @@ new Vue({
         return {
           Date: act.date,
           StockId: act.company,
-          Note: null,
+          Note: act.note,
           CouponPerc: null,
           Maturity: null,
           Notional: null,
@@ -219,6 +220,7 @@ new Vue({
             );
           } catch (e) {
             console.error(e);
+            console.log("file content:"+file);
             if (e.data && e.data.status) {
               status = e.data.status;
             } else {

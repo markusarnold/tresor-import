@@ -1,7 +1,7 @@
 {
   "name": "@mlordan/tresor.import",
   "__nameMASTER": "@tresor.one/import",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "__versionMASTER": "2.16.1",
   "description": "Creates Parqet activities from PDF statements or csv exports from different brokers",
   "files": [
@@ -20,6 +20,9 @@
     "test.SAVING_PLAN": "jest tests/brokers/comdirect.test.js -t 'Can the order parsed from saving_plan'",
     "test.BUY_LEIFHEIT": "jest tests/brokers/comdirect.test.js -t 'Can the buy order be parsed from purchase_leifheit_ag'",
     "test.BUY_INFINEON_AKTIENANLEIHE": "jest tests/brokers/comdirect.test.js -t 'Can parse buy Aktienanleihe: 2020_infineon_anleihe'",
+    "test.ZINS_INFINEON_AKTIENANLEIHE": "jest tests/brokers/comdirect.test.js -t 'Can parse Zins Aktienanleihe: 2020_infineon_anleihe'",
+    "test.EINLOESUNG_BAR_AMAZON_AKTIENANLEIHE": "jest tests/brokers/comdirect.test.js -t 'Can parse Einloesung in bar: 2022_Amazon.bar.Einloesung.Aktienanleihe'",
+    "test.EINLOESUNG_AKTIEN_ADIDAS_AKTIENANLEIHE": "jest tests/brokers/comdirect.test.js -t 'Can parse Einloesung in Aktien: 2022_Adidas.Aktien.Einloesung.Aktienanleihe'",
     "debug-test": "node --inspect-brk ./node_modules/.bin/jest --verbose",
     "lint": "eslint .",
     "precommit": "pretty-quick --staged --no-restage && npm run lint && npm t"

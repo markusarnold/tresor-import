@@ -2,12 +2,7 @@ import Big from 'big.js';
 import * as comdirect from '../../src/brokers/comdirect';
 import { validateAllSamples } from '../setup/brokers';
 import {
-  buySamples,
-  sellSamples,
-  dividendSamples,
-  taxInfoDividendSamples,
-  ignoredSamples,
-  allSamples,
+  allSamples, buySamples, dividendSamples, ignoredSamples, sellSamples, taxInfoDividendSamples
 } from './__mocks__/comdirect';
 
 describe('Broker: comdirect', () => {
@@ -33,6 +28,7 @@ describe('Broker: comdirect', () => {
         amount: 24.61,
         fee: 0.37,
         tax: 0,
+        note: '',
       });
     });
 
@@ -53,6 +49,7 @@ describe('Broker: comdirect', () => {
         amount: 25.39,
         fee: -0.55,
         tax: 0,
+        note: '',
       });
     });
 
@@ -75,6 +72,7 @@ describe('Broker: comdirect', () => {
         tax: 0,
         fxRate: 1.1761,
         foreignCurrency: 'USD',
+        note: '',
       });
     });
 
@@ -95,6 +93,7 @@ describe('Broker: comdirect', () => {
         amount: 2542.5,
         fee: 13.76,
         tax: 0,
+        note: '',
       });
     });
 
@@ -115,6 +114,7 @@ describe('Broker: comdirect', () => {
         amount: 2518.75,
         fee: 16.6,
         tax: 0,
+        note: '',
       });
     });
 
@@ -137,6 +137,7 @@ describe('Broker: comdirect', () => {
         amount: 652.7527269604054,
         fee: +Big(677.59).minus(652.7527269604054),
         tax: 0,
+        note: '',
       });
     });
 
@@ -157,6 +158,7 @@ describe('Broker: comdirect', () => {
         amount: 729,
         fee: +Big(741.4).minus(729),
         tax: 0,
+        note: '',
       });
     });
 
@@ -179,6 +181,7 @@ describe('Broker: comdirect', () => {
         tax: 0,
         foreignCurrency: 'USD',
         fxRate: 1.1458,
+        note: '',
       });
     });
 
@@ -199,6 +202,7 @@ describe('Broker: comdirect', () => {
         amount: 51.27,
         fee: -1.28,
         tax: 0,
+        note: '',
       });
     });
 
@@ -219,6 +223,7 @@ describe('Broker: comdirect', () => {
         amount: 132,
         fee: 9.9,
         tax: 0,
+        note: '',
       });
     });
 
@@ -239,6 +244,7 @@ describe('Broker: comdirect', () => {
         amount: 8.56,
         fee: 0.95,
         tax: 0,
+        note: '',
       });
     });
 
@@ -259,6 +265,7 @@ describe('Broker: comdirect', () => {
         amount: 101.19,
         fee: -1.2,
         tax: 0,
+        note: '',
       });
     });
 
@@ -279,9 +286,48 @@ describe('Broker: comdirect', () => {
         amount: 2000,
         fee: 0,
         tax: 0,
-      });
+        note: ''
+    });   
+  });
+
+  test('Can parse Einloesung in Aktien: 2022_Adidas.Aktien.Einloesung.Aktienanleihe', () => {
+    const result = comdirect.parsePages(buySamples[13]).activities;
+
+    expect(result.length).toEqual(2);
+    expect(result[0]).toEqual({
+      broker: 'comdirect',
+      type: 'Buy',
+      date: '2020-12-28',
+      datetime: '2020-12-28T' + result[0].datetime.substring(11),
+      isin: 'DE000A1EWWW0',
+      wkn: 'A1EWWW',
+      company: 'adidas AG Namens-Aktien o.N.',
+      shares: 3,
+      price: 333.3333333333333,
+      amount: 1000,
+      fee: 0,
+      tax: 0,
+      note: 'Einlösung in Aktien:(Vontobel Financial Products Protect Aktienanl.v.20(20)ADS, DE000VE5CGK9) -> (adidas AG Namens-Aktien o.N., DE000A1EWWW0)'
+    });
+    
+    expect(result[1]).toEqual({
+      broker: 'comdirect',
+      type: 'Sell',
+      date: '2020-12-28',
+      datetime: '2020-12-28T' + result[0].datetime.substring(11),
+      isin: 'DE000VE5CGK9',
+      wkn: 'VE5CGK',
+      company: 'Vontobel Financial Products Protect Aktienanl.v.20(20)ADS',
+      shares: 1,
+      price: 1000,
+      amount: 1000,
+      fee: 0,
+      tax: 0,
+      note: 'Pseudorückzahlung zur Ausbuchung der Anleihe'
     });
   });
+
+});
 
   describe('Validate Sells', () => {
     test('Can parse the sell order: 2020_eur_stock_biontech', () => {
@@ -301,6 +347,7 @@ describe('Broker: comdirect', () => {
         amount: 22300,
         fee: 68.2,
         tax: 3858.01,
+        note: '',
       });
     });
 
@@ -323,6 +370,7 @@ describe('Broker: comdirect', () => {
         tax: 0,
         foreignCurrency: 'USD',
         fxRate: 1.1934,
+        note: '',
       });
     });
 
@@ -343,6 +391,7 @@ describe('Broker: comdirect', () => {
         amount: 415.3,
         fee: 6.4,
         tax: 0,
+        note: '',
       });
     });
 
@@ -363,6 +412,7 @@ describe('Broker: comdirect', () => {
         amount: 1858,
         fee: 0,
         tax: 0,
+        note: '',
       });
     });
 
@@ -383,8 +433,31 @@ describe('Broker: comdirect', () => {
         amount: 302.25,
         fee: 6.8,
         tax: 0,
+        note: '',
       });
     });
+    
+    test('Can parse Einloesung in bar: 2022_Amazon.bar.Einloesung.Aktienanleihe', () => {
+      const result = comdirect.parsePages(sellSamples[5]).activities;
+
+      expect(result.length).toEqual(1);
+      expect(result[0]).toEqual({
+        broker: 'comdirect',
+        type: 'Sell',
+        date: '2022-02-08',
+        datetime: '2022-02-08T' + result[0].datetime.substring(11),
+        isin: 'DE000MS8JNW4',
+        wkn: 'MS8JNW',
+        company: 'Morgan Stanley B.V. EO-MTN 2021(22) Amazon.com',
+        shares: 0,
+        price: 0,
+        amount: 2000,
+        fee: 0,
+        tax: 0,
+        note: 'Einlösung in bar'
+      });
+    });
+
   });
 
   describe('Validate dividends', () => {
@@ -407,6 +480,7 @@ describe('Broker: comdirect', () => {
         tax: 0.07655665192242259,
         fxRate: 1.1756,
         foreignCurrency: 'USD',
+        note: '',
       });
     });
 
@@ -427,6 +501,7 @@ describe('Broker: comdirect', () => {
         amount: 12.73,
         fee: 0,
         tax: 0,
+        note: '',
       });
     });
 
@@ -449,6 +524,28 @@ describe('Broker: comdirect', () => {
         foreignCurrency: 'USD',
         fee: 0,
         tax: 0.07690335811330429,
+        note: '',
+      });
+    });
+
+    test('Can parse Zins Aktienanleihe: 2020_infineon_anleihe', () => {
+      const activities = comdirect.parsePages(dividendSamples[3]).activities;
+
+      expect(activities.length).toEqual(1);
+      expect(activities[0]).toEqual({
+        broker: 'comdirect',
+        type: 'Dividend',  
+        date: '2021-12-24',
+        datetime: '2021-12-24T' + activities[0].datetime.substring(11),
+        isin: 'DE000VQ122W2',
+        wkn: 'VQ122W',
+        company: 'Vontobel Financial Products Protect Pro Aktie v.21(21)IFX',
+        shares: 0,
+        price: 0,
+        amount: 146.39,
+        fee: 0,
+        tax: 0,
+        note: '',
       });
     });
   });
@@ -471,6 +568,7 @@ describe('Broker: comdirect', () => {
         amount: 1.37,
         fee: 0,
         tax: 0.35,
+        note: '',
       });
     });
 
@@ -491,6 +589,7 @@ describe('Broker: comdirect', () => {
         amount: 478.63,
         fee: 0,
         tax: 0,
+        note: '',
       });
     });
 
@@ -511,6 +610,7 @@ describe('Broker: comdirect', () => {
         amount: 116.79,
         fee: 0,
         tax: 0,
+        note: '',
       });
     });
 
@@ -531,6 +631,7 @@ describe('Broker: comdirect', () => {
         amount: 36,
         fee: 0,
         tax: 0,
+        note: '',
       });
     });
 
@@ -551,6 +652,7 @@ describe('Broker: comdirect', () => {
         amount: 3.48,
         fee: 0,
         tax: 0,
+        note: '',
       });
     });
 
@@ -571,6 +673,7 @@ describe('Broker: comdirect', () => {
         amount: 21,
         fee: 0,
         tax: 0,
+        note: '',
       });
     });
 
@@ -591,6 +694,7 @@ describe('Broker: comdirect', () => {
         amount: 2,
         fee: 0,
         tax: 0.23,
+        note: '',
       });
     });
 
@@ -611,6 +715,7 @@ describe('Broker: comdirect', () => {
         amount: 6.43,
         fee: 0,
         tax: 0.97,
+        note: '',
       });
     });
 
@@ -631,6 +736,7 @@ describe('Broker: comdirect', () => {
         amount: 25.32,
         fee: 0,
         tax: 6.67,
+        note: '',
       });
     });
 
@@ -651,6 +757,7 @@ describe('Broker: comdirect', () => {
         amount: 0.14,
         fee: 0,
         tax: 0.03,
+        note: '',
       });
     });
 
@@ -671,6 +778,7 @@ describe('Broker: comdirect', () => {
         amount: 0.57,
         fee: 0,
         tax: 0.13,
+        note: '',
       });
     });
 
@@ -691,6 +799,7 @@ describe('Broker: comdirect', () => {
         amount: 0.04,
         fee: 0,
         tax: 0.01,
+        note: '',
       });
     });
 
@@ -711,6 +820,7 @@ describe('Broker: comdirect', () => {
         amount: 1.93,
         fee: 0,
         tax: 0.39,
+        note: '',
       });
     });
   });

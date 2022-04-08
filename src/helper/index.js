@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon';
 import { ParqetActivityValidationError } from '@/errors';
+import { DateTime } from 'luxon';
 
 // Regex to match an ISIN-only string. The first two chars represent the country and the last one is the check digit.
 export const isinRegex = /^[A-Z]{2}[0-9A-Z]{9}[0-9]$/;
@@ -108,7 +108,11 @@ export function findPreviousRegexMatchIdx(arr, idx, regex) {
 
 function validateCommons(activity) {
   // All fields must have a value unequal undefined
-  if (!Object.values(activity).every(a => !!a || a === 0)) {
+  //if (!Object.values(activity).every(a => !!a || a === 0)) {
+  if (!Object.keys(activity)
+      .filter(key => !key.includes('note'))
+      .map(key => activity[key])
+      .every(a => !!a || a === 0)) {
     throw new ParqetActivityValidationError(
       'Invalid fields. Activity must not contain fields with undefined, or empty values.',
       activity,
@@ -171,9 +175,12 @@ function validateCommons(activity) {
     );
   }
 
-  if (Number(activity.shares) !== activity.shares || activity.shares <= 0) {
+  // because Zinsgutschrift does not have shares !
+  //if (Number(activity.shares) !== activity.shares || activity.shares <= 0) {  
+  if (Number(activity.shares) !== activity.shares || activity.shares < 0) {
     throw new ParqetActivityValidationError(
-      `Invalid 'shares'. Activity 'shares' field must be of type 'number' and greater than 0.`,
+      //`Invalid 'shares'. Activity 'shares' field must be of type 'number' and greater than 0.`,
+      `Invalid 'shares'. Activity 'shares' field must be of type 'number' and greater or equals to 0.`,
       activity,
       6
     );
