@@ -548,7 +548,28 @@ describe('Broker: comdirect', () => {
         amount: 146.39,
         fee: 0,
         tax: 0,
-        note: '',
+        note: '7,75       % Zinsen für 340  Tage vom 14.01.21 bis 23.12.21     Zahlbar: 24.12.2021',
+      });
+    });
+
+    test('Can parse Einloesung in Aktien: 2020_Porsche.Spitzenausgleichsbetrag.Einloesung.Aktienanleihe', () => {
+      const activities = comdirect.parsePages(dividendSamples[4]).activities;
+
+      expect(activities.length).toEqual(1);
+      expect(activities[0]).toEqual({
+        broker: 'comdirect',
+        type: 'Dividend',
+        date: '2020-11-27',
+        datetime: '2020-11-27T' + activities[0].datetime.substring(11),
+        isin: 'DE000CU6VQX2',
+        wkn: 'CU6VQX',
+        company: 'Société Générale Effekten GmbH AAL PROTECT 11.20 PAH3',
+        shares: 0,
+        price: 0,
+        amount: 82.52,
+        fee: 0,
+        tax: 0,
+        note: 'Dies ist der Spitzenausgleichsbetrag der neben der Lieferung des zugrunde liegenden Basiswertes in Höhe von  EUR 41,26      pro Nominal EUR 1000,00 auf Basis der Emissionsbedingungen gezahlt wird.',
       });
     });
   });

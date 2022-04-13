@@ -81,7 +81,7 @@ const findCompany = (text, type, formatId) => {
       return lineContent;
     }
     case 'Dividend': {
-      if (isZinsGutschrift(text)) {
+      if (isZinsGutschrift_OR_Spitzenausgleichsbetrag(text)) {
         // in this case the company name spreads also over the next but one line
         return (
           text[companyLineIndex + 2].trim() +
@@ -520,16 +520,17 @@ const parseData = (textArr, type) => {
       [activity.isin, activity.wkn] = findISINAndWKN(textArr, 3, 1);
       activity.company = findCompany(textArr, type, formatId);
       date = findDateDividend(textArr);
-      activity.shares = !isZinsGutschrift(textArr)
+      activity.shares = !isZinsGutschrift_OR_Spitzenausgleichsbetrag(textArr)
         ? findDividendShares(textArr)
         : 0;
       activity.amount = findPayout(textArr, fxRate)[0];
-      activity.price = !isZinsGutschrift(textArr)
+      activity.price = !isZinsGutschrift_OR_Spitzenausgleichsbetrag(textArr)
         ? +Big(activity.amount).div(activity.shares)
         : 0;
-      activity.tax = !isZinsGutschrift(textArr)
+      activity.tax = !isZinsGutschrift_OR_Spitzenausgleichsbetrag(textArr)
         ? findTax(textArr, fxRate, formatId)[0]
         : 0;
+      activity.note = findZinsen_OR_SpitzenausgleichsbetragText(textArr);
       break;
     }
     case 'TaxDividend': {
@@ -646,6 +647,31 @@ function isAktienanleiheMitEinloesungInAktien(content) {
   return content.some(line => line.startsWith('Tilgung in Stücken'));
 }
 
-function isZinsGutschrift(text) {
-  return text.includes('Zinsgutschrift');
+function isZinsGutschrift_OR_Spitzenausgleichsbetrag(text) {
+  return isZinsGutSchrift(text) || isSpitzenausgleichsbetrag(text);
 }
+
+function isZinsGutSchrift(textArr) {
+  return findLineNo(textArr, row => row.includes('Zinsgutschrift')) >= 0;
+}
+function isSpitzenausgleichsbetrag(textArr) {
+  return textArr.findIndex(row => row.includes('Spitzenausgleichsbetrag'));
+}
+
+function findLineNo(textArr, searchStr) {
+  return textArr.findIndex(row => row.includes(searchStr));
+}
+
+const findZinsen_OR_SpitzenausgleichsbetragText = textArr => {
+  const zinsenLineIndex = findLineNo(textArr, '% Zinsen');
+  const spAusgleichLine = findLineNo(textArr, 'Spitzenausgleichsbetrag');
+  if (zinsenLineIndex >= 0) {
+    return textArr[zinsenLineIndex];
+  } else if (spAusgleichLine >= 0) {
+    return `${textArr[spAusgleichLine]} ${textArr[spAusgleichLine + 1]} ${
+      textArr[spAusgleichLine + 2]
+    }`;
+  } else {
+    return '';
+  }
+};

@@ -29,6 +29,7 @@ export const dividendSamples = [
   require('./dividend/currency_eur.json'),
   require('./dividend/dividend_usd_stryker_corp.json'),
   require('./dividend/2020_infineon_anleihe_zins.json'),
+  require('./dividend/2020_Porsche.Spitzenausgleichsbetrag.Einloesung.Aktienanleihe.json'),
 ];
 
 export const taxInfoDividendSamples = [
