@@ -24,6 +24,8 @@
     "test.EINLOESUNG_BAR_AMAZON_AKTIENANLEIHE": "jest tests/brokers/comdirect.test.js -t 'Can parse Einloesung in bar: 2022_Amazon.bar.Einloesung.Aktienanleihe'",
     "test.EINLOESUNG_AKTIEN_ADIDAS_AKTIENANLEIHE": "jest tests/brokers/comdirect.test.js -t 'Can parse Einloesung in Aktien: 2022_Adidas.Aktien.Einloesung.Aktienanleihe'",
     "test.EINLOESUNG_AKTIEN_Spitzenausgleichsbetrag_PORSCHE_AKTIENANLEIHE": "jest tests/brokers/comdirect.test.js -t 'Can parse Einloesung in Aktien: 2020_Porsche.Spitzenausgleichsbetrag.Einloesung.Aktienanleihe'",
+    "REGRESSIONS:": "",
+    "test.DIVIDEND_FOR_Stryker_Corp.": "jest tests/brokers/comdirect.test.js -t 'Can the dividend in USD for Stryker Corp. be parsed from the document'",
     "debug-test": "node --inspect-brk ./node_modules/.bin/jest --verbose",
     "lint": "eslint .",
     "precommit": "pretty-quick --staged --no-restage && npm run lint && npm t"

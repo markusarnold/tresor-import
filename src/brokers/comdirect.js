@@ -652,10 +652,10 @@ function isZinsGutschrift_OR_Spitzenausgleichsbetrag(text) {
 }
 
 function isZinsGutSchrift(textArr) {
-  return findLineNo(textArr, row => row.includes('Zinsgutschrift')) >= 0;
+  return findLineNo(textArr, 'Zinsgutschrift') >= 0;
 }
 function isSpitzenausgleichsbetrag(textArr) {
-  return textArr.findIndex(row => row.includes('Spitzenausgleichsbetrag'));
+  return findLineNo(textArr, 'Spitzenausgleichsbetrag') >= 0;
 }
 
 function findLineNo(textArr, searchStr) {
