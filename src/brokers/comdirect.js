@@ -2,7 +2,7 @@ import {
   createActivityDateTime,
   parseGermanNum,
   timeRegex,
-  validateActivity
+  validateActivity,
 } from '@/helper';
 import Big from 'big.js';
 import { onvistaIdentificationString } from './onvista';
@@ -27,7 +27,8 @@ const findISINAndWKN = (pdfPage, spanISIN = 0, spanWKN = 0) => {
 };
 
 const findISINAndWKNAndCompanyforAktieOfAnleihe = textArr => {
-  const wknLineIndex = findLineNo(textArr, 'Nach Wahl des Emittenten erfolgt') +1;
+  const wknLineIndex =
+    findLineNo(textArr, 'Nach Wahl des Emittenten erfolgt') + 1;
   const wknLine = textArr[wknLineIndex].split(/\s+/);
   const wkn = wknLine[wknLine.length - 1];
 
@@ -45,7 +46,7 @@ const findISINAndWKNAndCompanyforAktieOfAnleihe = textArr => {
 };
 
 const findPriceOfAnleihe = textArr => {
-  const priceLineIndex = findLineNo(textArr, 'Umtauschverhältnis STK')
+  const priceLineIndex = findLineNo(textArr, 'Umtauschverhältnis STK');
   const priceLine = textArr[priceLineIndex].split(/\s+/);
   return Big(parseGermanNum(priceLine[priceLine.length - 1]));
 };
@@ -64,13 +65,14 @@ const findCompany = (text, type, formatId) => {
         const fields = text[companyLineIndex + 1].split('%');
 
         // fields[0] will contain "6,10000", which needs to be removed
-        const name1 = Number(parseGermanNum(fields[0]))  
-          ?fields[1]
-          :text[companyLineIndex + 1];
+        const name1 = Number(parseGermanNum(fields[0]))
+          ? fields[1]
+          : text[companyLineIndex + 1];
 
         const name2 = text[companyLineIndex + 2];
-        return name1.replace(wkn, '').trim() + ' ' + 
-               name2.replace(isin,'').trim();
+        return (
+          name1.replace(wkn, '').trim() + ' ' + name2.replace(isin, '').trim()
+        );
       } else {
         return text[companyLineIndex + 1].split(/\s+/).slice(0, -1).join(' ');
       }
@@ -506,7 +508,8 @@ const parseData = (textArr, type) => {
       activity.fee = findFee(textArr, activity.amount, false, formatId);
 
       if (isAktienAnleihe(textArr)) {
-        [activity.interestRate, activity.maturity ] = findMaturityAndInterestRate(textArr);
+        [activity.interestRate, activity.maturity] =
+          findMaturityAndInterestRate(textArr);
         activity.relatedIsin = activity.isin;
       }
       break;
@@ -706,20 +709,20 @@ const findZinsen_OR_SpitzenausgleichsbetragText = textArr => {
   }
 };
 
-const findMaturityAndInterestRate = (text) => {
-    const companyLineIndex = findLineNo(text, '/ISIN') +1;
+const findMaturityAndInterestRate = text => {
+  const companyLineIndex = findLineNo(text, '/ISIN') + 1;
 
-    // e.g. extract interest rate "6,10000" from line below:
-    //"6,10000% HSBC Trinkaus & Burkhardt AG TT97HB",
-    const fields = text[companyLineIndex].split('%');
+  // e.g. extract interest rate "6,10000" from line below:
+  //"6,10000% HSBC Trinkaus & Burkhardt AG TT97HB",
+  const fields = text[companyLineIndex].split('%');
 
-    const interestRate = parseGermanNum(fields[0]);
+  const interestRate = parseGermanNum(fields[0]);
 
-    // e.g. extract maturity "28.12.2022" from lines below:
-    // Fälligkeit : GESAMTFAELLIG
-    //              am 28.12.2022
-    const maturityLineIndex = findLineNo(text, 'Fälligkeit')+1;
-    const maturity = text[maturityLineIndex].replace('am ','');
+  // e.g. extract maturity "28.12.2022" from lines below:
+  // Fälligkeit : GESAMTFAELLIG
+  //              am 28.12.2022
+  const maturityLineIndex = findLineNo(text, 'Fälligkeit') + 1;
+  const maturity = text[maturityLineIndex].replace('am ', '');
 
-    return [interestRate, maturity];
-}
+  return [interestRate, maturity];
+};

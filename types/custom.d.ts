@@ -46,8 +46,8 @@ export interface Activity {
   fxRate?: number;
   note?: string;
   interestRate?: number;
-  maturity?:string; 
-  relatedIsin?:string; 
+  maturity?: string;
+  relatedIsin?: string;
 }
 
 export interface Implementation {

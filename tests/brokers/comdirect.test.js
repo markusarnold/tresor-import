@@ -7,7 +7,7 @@ import {
   dividendSamples,
   ignoredSamples,
   sellSamples,
-  taxInfoDividendSamples
+  taxInfoDividendSamples,
 } from './__mocks__/comdirect';
 
 describe('Broker: comdirect', () => {
@@ -292,9 +292,9 @@ describe('Broker: comdirect', () => {
         fee: 0,
         tax: 0,
         note: '',
-        interestRate:6.1,
-        maturity:'28.12.2022',
-        relatedIsin:'DE000TT97HB4'
+        interestRate: 6.1,
+        maturity: '28.12.2022',
+        relatedIsin: 'DE000TT97HB4',
       });
     });
 
@@ -316,7 +316,7 @@ describe('Broker: comdirect', () => {
         fee: 0,
         tax: 0,
         note: 'Einlösung in Aktien:(Vontobel Financial Products Protect Aktienanl.v.20(20)ADS, DE000VE5CGK9) -> (adidas AG Namens-Aktien o.N., DE000A1EWWW0)',
-        relatedIsin:'DE000VE5CGK9',
+        relatedIsin: 'DE000VE5CGK9',
       });
 
       expect(result[1]).toEqual({
@@ -333,7 +333,7 @@ describe('Broker: comdirect', () => {
         fee: 0,
         tax: 0,
         note: 'Pseudorückzahlung zur Ausbuchung der Anleihe',
-        relatedIsin:'DE000VE5CGK9',
+        relatedIsin: 'DE000VE5CGK9',
       });
     });
   });
@@ -554,7 +554,7 @@ describe('Broker: comdirect', () => {
         fee: 0,
         tax: 0,
         note: '7,75       % Zinsen für 340  Tage vom 14.01.21 bis 23.12.21     Zahlbar: 24.12.2021',
-        relatedIsin:'DE000VQ122W2'
+        relatedIsin: 'DE000VQ122W2',
       });
     });
 
@@ -576,7 +576,7 @@ describe('Broker: comdirect', () => {
         fee: 0,
         tax: 0,
         note: 'Dies ist der Spitzenausgleichsbetrag der neben der Lieferung des zugrunde liegenden Basiswertes in Höhe von  EUR 41,26      pro Nominal EUR 1000,00 auf Basis der Emissionsbedingungen gezahlt wird.',
-        relatedIsin:'DE000CU6VQX2',
+        relatedIsin: 'DE000CU6VQX2',
       });
     });
   });
