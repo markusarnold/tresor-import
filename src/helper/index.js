@@ -112,6 +112,7 @@ function validateCommons(activity) {
   if (
     !Object.keys(activity)
       .filter(key => !key.includes('note'))
+      .filter(key => !key.includes('relatedIsin'))
       .map(key => activity[key])
       .every(a => !!a || a === 0)
   ) {

@@ -2,7 +2,7 @@ import {
   createActivityDateTime,
   parseGermanNum,
   timeRegex,
-  validateActivity,
+  validateActivity
 } from '@/helper';
 import Big from 'big.js';
 import { onvistaIdentificationString } from './onvista';
@@ -27,8 +27,7 @@ const findISINAndWKN = (pdfPage, spanISIN = 0, spanWKN = 0) => {
 };
 
 const findISINAndWKNAndCompanyforAktieOfAnleihe = textArr => {
-  const wknLineIndex =
-    textArr.findIndex(t => t.includes('Nach Wahl des Emittenten erfolgt')) + 1;
+  const wknLineIndex = findLineNo(textArr, 'Nach Wahl des Emittenten erfolgt') +1;
   const wknLine = textArr[wknLineIndex].split(/\s+/);
   const wkn = wknLine[wknLine.length - 1];
 
@@ -46,9 +45,7 @@ const findISINAndWKNAndCompanyforAktieOfAnleihe = textArr => {
 };
 
 const findPriceOfAnleihe = textArr => {
-  const priceLineIndex = textArr.findIndex(t =>
-    t.includes('Umtauschverhältnis STK')
-  );
+  const priceLineIndex = findLineNo(textArr, 'Umtauschverhältnis STK')
   const priceLine = textArr[priceLineIndex].split(/\s+/);
   return Big(parseGermanNum(priceLine[priceLine.length - 1]));
 };
@@ -58,7 +55,25 @@ const findCompany = (text, type, formatId) => {
   // span = 2 means its a dividend PDF - dividends dont have the WKN in the same line
   switch (type) {
     case 'Buy': {
-      return text[companyLineIndex + 1].split(/\s+/).slice(0, -1).join(' ');
+      if (isAktienAnleihe(text)) {
+        const [isin, wkn] = findISINAndWKN(text, 2, 1);
+
+        // e.g. company name spread over two lines with leading percentage "6,10000" and trailing isin "DE000TT97HB4":
+        //"6,10000% HSBC Trinkaus & Burkhardt AG TT97HB",
+        //"Prot.-Akt.Anl.Pro v.21(22)IFX DE000TT97HB4",
+        const fields = text[companyLineIndex + 1].split('%');
+
+        // fields[0] will contain "6,10000", which needs to be removed
+        const name1 = Number(parseGermanNum(fields[0]))  
+          ?fields[1]
+          :text[companyLineIndex + 1];
+
+        const name2 = text[companyLineIndex + 2];
+        return name1.replace(wkn, '').trim() + ' ' + 
+               name2.replace(isin,'').trim();
+      } else {
+        return text[companyLineIndex + 1].split(/\s+/).slice(0, -1).join(' ');
+      }
     }
     case 'Sell': {
       if (
@@ -489,6 +504,11 @@ const parseData = (textArr, type) => {
       activity.shares = findShares(textArr, formatId);
       activity.price = +Big(activity.amount).div(activity.shares);
       activity.fee = findFee(textArr, activity.amount, false, formatId);
+
+      if (isAktienAnleihe(textArr)) {
+        [activity.interestRate, activity.maturity ] = findMaturityAndInterestRate(textArr);
+        activity.relatedIsin = activity.isin;
+      }
       break;
     }
     case 'Sell': {
@@ -531,6 +551,10 @@ const parseData = (textArr, type) => {
         ? findTax(textArr, fxRate, formatId)[0]
         : 0;
       activity.note = findZinsen_OR_SpitzenausgleichsbetragText(textArr);
+
+      if (isZinsGutschrift_OR_Spitzenausgleichsbetrag(textArr)) {
+        activity.relatedIsin = activity.isin;
+      }
       break;
     }
     case 'TaxDividend': {
@@ -586,6 +610,7 @@ const parseDataAktienanleiheMitEinloesungInAktien = textArr => {
   activitySell.price = +findPriceOfAnleihe(textArr);
   activitySell.amount = +findAmount(textArr, fxRate, foreignCurrency, formatId);
   activitySell.shares = +Big(activitySell.amount).div(activitySell.price);
+  activitySell.relatedIsin = activitySell.isin;
 
   /** @type {Partial<Importer.Activity>} */
   let activityBuy = {
@@ -605,6 +630,8 @@ const parseDataAktienanleiheMitEinloesungInAktien = textArr => {
   activityBuy.price = +Big(activityBuy.amount).div(activityBuy.shares);
   activityBuy.fee = findFee(textArr, activityBuy.amount, false, formatId);
   [activityBuy.date, activityBuy.datetime] = createActivityDateTime(date, time);
+
+  activityBuy.relatedIsin = activitySell.isin;
 
   return [validateActivity(activityBuy), validateActivity(activitySell)];
 };
@@ -657,6 +684,9 @@ function isZinsGutSchrift(textArr) {
 function isSpitzenausgleichsbetrag(textArr) {
   return findLineNo(textArr, 'Spitzenausgleichsbetrag') >= 0;
 }
+function isAktienAnleihe(textArr) {
+  return findLineNo(textArr, 'Fälligkeit') >= 0;
+}
 
 function findLineNo(textArr, searchStr) {
   return textArr.findIndex(row => row.includes(searchStr));
@@ -675,3 +705,21 @@ const findZinsen_OR_SpitzenausgleichsbetragText = textArr => {
     return '';
   }
 };
+
+const findMaturityAndInterestRate = (text) => {
+    const companyLineIndex = findLineNo(text, '/ISIN') +1;
+
+    // e.g. extract interest rate "6,10000" from line below:
+    //"6,10000% HSBC Trinkaus & Burkhardt AG TT97HB",
+    const fields = text[companyLineIndex].split('%');
+
+    const interestRate = parseGermanNum(fields[0]);
+
+    // e.g. extract maturity "28.12.2022" from lines below:
+    // Fälligkeit : GESAMTFAELLIG
+    //              am 28.12.2022
+    const maturityLineIndex = findLineNo(text, 'Fälligkeit')+1;
+    const maturity = text[maturityLineIndex].replace('am ','');
+
+    return [interestRate, maturity];
+}

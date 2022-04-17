@@ -45,6 +45,9 @@ export interface Activity {
   foreignCurrency?: string;
   fxRate?: number;
   note?: string;
+  interestRate?: number;
+  maturity?:string; 
+  relatedIsin?:string; 
 }
 
 export interface Implementation {

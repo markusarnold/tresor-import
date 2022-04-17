@@ -1,7 +1,7 @@
 {
   "name": "@mlordan/tresor.import",
   "__nameMASTER": "@tresor.one/import",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "__versionMASTER": "2.16.1",
   "description": "Creates Parqet activities from PDF statements or csv exports from different brokers",
   "files": [
@@ -17,6 +17,7 @@
     "start": "concurrently --kill-others \"npm run demo\" \"npm run dev\"",
     "pretest": "tsc",
     "test": "jest --verbose",
+    "test.COMDIRECT_ALL": "jest tests/brokers/comdirect.test.js -t",
     "test.SAVING_PLAN": "jest tests/brokers/comdirect.test.js -t 'Can the order parsed from saving_plan'",
     "test.BUY_LEIFHEIT": "jest tests/brokers/comdirect.test.js -t 'Can the buy order be parsed from purchase_leifheit_ag'",
     "test.BUY_INFINEON_AKTIENANLEIHE": "jest tests/brokers/comdirect.test.js -t 'Can parse buy Aktienanleihe: 2020_infineon_anleihe'",
