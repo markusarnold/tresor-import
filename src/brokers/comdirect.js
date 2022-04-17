@@ -2,7 +2,7 @@ import {
   createActivityDateTime,
   parseGermanNum,
   timeRegex,
-  validateActivity,
+  validateActivity
 } from '@/helper';
 import Big from 'big.js';
 import { onvistaIdentificationString } from './onvista';
@@ -636,7 +636,7 @@ const parseDataAktienanleiheMitEinloesungInAktien = textArr => {
 
   activityBuy.relatedIsin = activitySell.isin;
 
-  return [validateActivity(activityBuy), validateActivity(activitySell)];
+  return [validateActivity(activitySell), validateActivity(activityBuy)];
 };
 
 export const parsePages = contents => {
