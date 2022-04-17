@@ -7,7 +7,7 @@ import {
   dividendSamples,
   ignoredSamples,
   sellSamples,
-  taxInfoDividendSamples
+  taxInfoDividendSamples,
 } from './__mocks__/comdirect';
 
 describe('Broker: comdirect', () => {
@@ -336,7 +336,6 @@ describe('Broker: comdirect', () => {
         note: 'Einlösung in Aktien:(Vontobel Financial Products Protect Aktienanl.v.20(20)ADS, DE000VE5CGK9) -> (adidas AG Namens-Aktien o.N., DE000A1EWWW0)',
         relatedIsin: 'DE000VE5CGK9',
       });
-
     });
   });
 
