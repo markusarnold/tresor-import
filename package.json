@@ -1,7 +1,7 @@
 {
   "name": "@mlordan/tresor.import",
   "__nameMASTER": "@tresor.one/import",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "__versionMASTER": "2.16.1",
   "description": "Creates Parqet activities from PDF statements or csv exports from different brokers",
   "files": [

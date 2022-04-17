@@ -7,7 +7,7 @@ import {
   dividendSamples,
   ignoredSamples,
   sellSamples,
-  taxInfoDividendSamples,
+  taxInfoDividendSamples
 } from './__mocks__/comdirect';
 
 describe('Broker: comdirect', () => {
@@ -302,7 +302,25 @@ describe('Broker: comdirect', () => {
       const result = comdirect.parsePages(buySamples[13]).activities;
 
       expect(result.length).toEqual(2);
+
       expect(result[0]).toEqual({
+        broker: 'comdirect',
+        type: 'Sell',
+        date: '2020-12-28',
+        datetime: '2020-12-28T' + result[0].datetime.substring(11),
+        isin: 'DE000VE5CGK9',
+        wkn: 'VE5CGK',
+        company: 'Vontobel Financial Products Protect Aktienanl.v.20(20)ADS',
+        shares: 1,
+        price: 1000,
+        amount: 1000,
+        fee: 0,
+        tax: 0,
+        note: 'Pseudorückzahlung zur Ausbuchung der Anleihe',
+        relatedIsin: 'DE000VE5CGK9',
+      });
+
+      expect(result[1]).toEqual({
         broker: 'comdirect',
         type: 'Buy',
         date: '2020-12-28',
@@ -319,22 +337,6 @@ describe('Broker: comdirect', () => {
         relatedIsin: 'DE000VE5CGK9',
       });
 
-      expect(result[1]).toEqual({
-        broker: 'comdirect',
-        type: 'Sell',
-        date: '2020-12-28',
-        datetime: '2020-12-28T' + result[0].datetime.substring(11),
-        isin: 'DE000VE5CGK9',
-        wkn: 'VE5CGK',
-        company: 'Vontobel Financial Products Protect Aktienanl.v.20(20)ADS',
-        shares: 1,
-        price: 1000,
-        amount: 1000,
-        fee: 0,
-        tax: 0,
-        note: 'Pseudorückzahlung zur Ausbuchung der Anleihe',
-        relatedIsin: 'DE000VE5CGK9',
-      });
     });
   });
 

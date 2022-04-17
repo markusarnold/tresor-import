@@ -2,7 +2,7 @@ import {
   createActivityDateTime,
   parseGermanNum,
   timeRegex,
-  validateActivity
+  validateActivity,
 } from '@/helper';
 import Big from 'big.js';
 import { onvistaIdentificationString } from './onvista';
