@@ -2,7 +2,7 @@ import {
   createActivityDateTime,
   parseGermanNum,
   timeRegex,
-  validateActivity,
+  validateActivity
 } from '@/helper';
 import Big from 'big.js';
 import { onvistaIdentificationString } from './onvista';
@@ -503,7 +503,11 @@ const parseData = (textArr, type) => {
       [activity.isin, activity.wkn] = findISINAndWKN(textArr, 2, 1);
       activity.company = findCompany(textArr, type, formatId);
       activity.amount = +findAmount(textArr, fxRate, foreignCurrency, formatId);
-      activity.shares = findShares(textArr, formatId);
+      if (isAktienAnleihe(textArr)) {
+        activity.shares = 1;
+      } else {
+        activity.shares = findShares(textArr, formatId);
+      }
       activity.price = +Big(activity.amount).div(activity.shares);
       activity.fee = findFee(textArr, activity.amount, false, formatId);
 
@@ -610,8 +614,8 @@ const parseDataAktienanleiheMitEinloesungInAktien = textArr => {
     date,
     time
   );
-  activitySell.price = +findPriceOfAnleihe(textArr);
   activitySell.amount = +findAmount(textArr, fxRate, foreignCurrency, formatId);
+  activitySell.price = activitySell.amount;
   activitySell.shares = +Big(activitySell.amount).div(activitySell.price);
   activitySell.relatedIsin = activitySell.isin;
 

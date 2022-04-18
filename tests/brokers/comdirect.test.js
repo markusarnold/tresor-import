@@ -7,7 +7,7 @@ import {
   dividendSamples,
   ignoredSamples,
   sellSamples,
-  taxInfoDividendSamples,
+  taxInfoDividendSamples
 } from './__mocks__/comdirect';
 
 describe('Broker: comdirect', () => {
@@ -286,8 +286,8 @@ describe('Broker: comdirect', () => {
         isin: 'DE000TT97HB4',
         wkn: 'TT97HB',
         company: 'HSBC Trinkaus & Burkhardt AG Prot.-Akt.Anl.Pro v.21(22)IFX',
-        shares: 2000,
-        price: 1,
+        shares: 1,
+        price: 2000,
         amount: 2000,
         fee: 0,
         tax: 0,
