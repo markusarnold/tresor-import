@@ -7,7 +7,7 @@ import {
   dividendSamples,
   ignoredSamples,
   sellSamples,
-  taxInfoDividendSamples,
+  taxInfoDividendSamples
 } from './__mocks__/comdirect';
 
 describe('Broker: comdirect', () => {
@@ -459,8 +459,8 @@ describe('Broker: comdirect', () => {
         isin: 'DE000MS8JNW4',
         wkn: 'MS8JNW',
         company: 'Morgan Stanley B.V. EO-MTN 2021(22) Amazon.com',
-        shares: 0,
-        price: 0,
+        shares: 1,
+        price: 2000,
         amount: 2000,
         fee: 0,
         tax: 0,

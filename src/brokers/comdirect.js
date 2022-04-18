@@ -2,7 +2,7 @@ import {
   createActivityDateTime,
   parseGermanNum,
   timeRegex,
-  validateActivity,
+  validateActivity
 } from '@/helper';
 import Big from 'big.js';
 import { onvistaIdentificationString } from './onvista';
@@ -527,11 +527,14 @@ const parseData = (textArr, type) => {
       date = findDateBuySell(textArr);
       time = findOrderTime(textArr);
       [fxRate, foreignCurrency] = findBuyFxRateForeignCurrency(textArr);
-      activity.shares = findShares(textArr, formatId);
       activity.amount = +findAmount(textArr, fxRate, foreignCurrency, formatId);
-      activity.price = isAktienanleiheMitEinloesungBar(textArr)
-        ? 0
-        : +Big(activity.amount).div(activity.shares);
+      if (isAktienanleiheMitEinloesungBar(textArr)) {
+        activity.shares = 1;  
+        activity.price = activity.amount;
+      } else {
+        activity.shares = findShares(textArr, formatId);
+        activity.price = +Big(activity.amount).div(activity.shares);
+      }
       activity.fee = findFee(textArr, activity.amount, true, formatId);
       activity.tax = findTax(textArr, fxRate, formatId)[0];
       break;
