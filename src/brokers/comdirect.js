@@ -2,7 +2,7 @@ import {
   createActivityDateTime,
   parseGermanNum,
   timeRegex,
-  validateActivity
+  validateActivity,
 } from '@/helper';
 import Big from 'big.js';
 import { onvistaIdentificationString } from './onvista';
@@ -43,12 +43,6 @@ const findISINAndWKNAndCompanyforAktieOfAnleihe = textArr => {
   wknLine.pop(); // drop last two
   const compName = wknLine.concat(isinLine).join(' ');
   return [isin, wkn, compName];
-};
-
-const findPriceOfAnleihe = textArr => {
-  const priceLineIndex = findLineNo(textArr, 'Umtauschverhältnis STK');
-  const priceLine = textArr[priceLineIndex].split(/\s+/);
-  return Big(parseGermanNum(priceLine[priceLine.length - 1]));
 };
 
 const findCompany = (text, type, formatId) => {
