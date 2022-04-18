@@ -7,7 +7,7 @@ import {
   dividendSamples,
   ignoredSamples,
   sellSamples,
-  taxInfoDividendSamples
+  taxInfoDividendSamples,
 } from './__mocks__/comdirect';
 
 describe('Broker: comdirect', () => {
